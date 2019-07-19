@@ -5,19 +5,18 @@ exports.getDonates = async (req, res) => {
     const donates = await donateDAO.getDonates();
     res.status(200).json({ status: 'success', data: { donates } });
   } catch (error) {
-    res.status(404).json({ status: 'fail', data: error });
+    res.status(404).json({ status: 'fail', message: error });
   }
 };
 
-exports.getDonate = (req, res) => {
-  const { id } = req.params.id;
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      donates: { id }
-    }
-  });
+exports.getDonate = async (req, res) => {
+  try {
+    const { params } = req;
+    const donate = await donateDAO.getDonate(params.id);
+    res.status(200).json({ status: 'success', data: { donate } });
+  } catch (error) {
+    res.status(404).json({ status: 'fail', message: error });
+  }
 };
 
 exports.createDonate = async (req, res) => {
