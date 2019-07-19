@@ -5,7 +5,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(donateController.getAllDonates)
+  .get(donateController.getDonates)
   .post(donateController.createDonate);
 
 router
