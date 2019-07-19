@@ -1,5 +1,12 @@
+const dotenv = require('dotenv');
+
+dotenv.config();
+const mongoose = require('mongoose');
+
 const app = require('./app');
 
-const port = 3000;
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true
+});
 
-app.listen(port, () => {});
+app.listen(process.env.PORT, () => {});

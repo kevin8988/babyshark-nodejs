@@ -1,7 +1,7 @@
 const express = require('express');
-const donateRouter = require('./routes/donateRouter');
-const userRouter = require('./routes/userRouter');
-const eventRouter = require('./routes/eventRouter');
+const donateRouter = require('./src/routes/donateRouter');
+const userRouter = require('./src/routes/userRouter');
+const eventRouter = require('./src/routes/eventRouter');
 
 const app = express();
 
