@@ -1,5 +1,5 @@
 const express = require('express');
-const donateController = require('../controllers/DonateController');
+const donateController = require('../controllers/donateController');
 
 const router = express.Router();
 

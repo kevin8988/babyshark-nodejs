@@ -1,3 +1,5 @@
+const donateDAO = require('./../dao/donateDAO');
+
 exports.getAllDonates = (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -18,15 +20,15 @@ exports.getDonate = (req, res) => {
   });
 };
 
-exports.createDonate = (req, res) => {
-  const donate = req.body;
+exports.createDonate = async (req, res) => {
+  try {
+    const { body } = req;
+    const donate = await donateDAO.create(body);
 
-  res.status(201).json({
-    status: 'success',
-    data: {
-      donates: [donate]
-    }
-  });
+    res.status(201).json({ status: 'success', data: { donate } });
+  } catch (error) {
+    res.status(400).json({ status: 'fail', message: error });
+  }
 };
 
 exports.updateDonate = (req, res) => {
