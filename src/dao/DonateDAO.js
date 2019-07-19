@@ -22,3 +22,8 @@ exports.update = async (id, data) => {
   });
   return donate;
 };
+
+exports.delete = async id => {
+  const donate = await Donate.findByIdAndDelete(id);
+  return donate;
+};

@@ -23,7 +23,6 @@ exports.createDonate = async (req, res) => {
   try {
     const { body } = req;
     const donate = await donateDAO.create(body);
-
     res.status(201).json({ status: 'success', data: { donate } });
   } catch (error) {
     res.status(400).json({ status: 'fail', message: error });
@@ -40,6 +39,12 @@ exports.updateDonate = async (req, res) => {
   }
 };
 
-exports.deleteDonate = (req, res) => {
-  res.status(204).send({ status: 'success', data: null });
+exports.deleteDonate = async (req, res) => {
+  try {
+    const { params } = req;
+    await donateDAO.delete(params.id);
+    res.status(204).send({ status: 'success', data: null });
+  } catch (error) {
+    res.status(404).send({ status: 'success', message: error });
+  }
 };
