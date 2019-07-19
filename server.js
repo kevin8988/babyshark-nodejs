@@ -10,7 +10,9 @@ const databaseUrl = {
 };
 
 mongoose.connect(databaseUrl[process.env.NODE_ENV.trim()], {
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useCreateIndex: true
 });
 
 app.listen(process.env.PORT);
