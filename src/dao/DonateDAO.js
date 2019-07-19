@@ -14,3 +14,11 @@ exports.getDonate = async id => {
   const donate = await Donate.findById(id);
   return donate;
 };
+
+exports.update = async (id, data) => {
+  const donate = await Donate.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidator: true
+  });
+  return donate;
+};

@@ -30,12 +30,14 @@ exports.createDonate = async (req, res) => {
   }
 };
 
-exports.updateDonate = (req, res) => {
-  const { id } = req.params.id;
-  res.status(200).json({
-    status: 'success',
-    data: { donate: `Donate with id ${id} updated...` }
-  });
+exports.updateDonate = async (req, res) => {
+  try {
+    const { params, body } = req;
+    const donate = await donateDAO.update(params.id, body);
+    res.status(200).json({ status: 'success', data: { donate } });
+  } catch (error) {
+    res.status(404).json({ status: 'fail', message: error });
+  }
 };
 
 exports.deleteDonate = (req, res) => {
