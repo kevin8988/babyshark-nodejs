@@ -13,4 +13,4 @@ mongoose.connect(databaseUrl[process.env.NODE_ENV.trim()], {
   useNewUrlParser: true
 });
 
-app.listen(process.env.PORT, () => {});
+app.listen(process.env.PORT);
