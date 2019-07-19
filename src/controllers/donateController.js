@@ -8,7 +8,7 @@ exports.getAllDonates = (req, res) => {
 };
 
 exports.getDonate = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params.id;
 
   res.status(200).json({
     status: 'success',
@@ -30,7 +30,7 @@ exports.createDonate = (req, res) => {
 };
 
 exports.updateDonate = (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params.id;
   res.status(200).json({
     status: 'success',
     data: { donate: `Donate with id ${id} updated...` }
