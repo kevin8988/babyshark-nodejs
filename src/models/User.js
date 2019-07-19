@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A donate must have a password'],
     trim: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now()
   }
 });
 
