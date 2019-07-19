@@ -1,4 +1,4 @@
-const donateDAO = require('./../dao/donateDAO');
+const donateDAO = require('../dao/donateDAO');
 
 exports.getDonates = async (req, res) => {
   try {
