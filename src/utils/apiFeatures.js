@@ -60,4 +60,14 @@ module.exports = class ApiFeatures {
     this.query = this.query.find().limit(10);
     return this;
   }
+
+  fields() {
+    if (this.queryParam.fields) {
+      const fields = this.queryParam.fields.split(',').join(' ');
+      this.query = this.query.select(fields);
+    } else {
+      this.query = this.query.select('-createdAt -__v');
+    }
+    return this;
+  }
 };

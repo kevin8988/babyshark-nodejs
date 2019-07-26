@@ -7,7 +7,7 @@ exports.create = async data => {
 };
 
 exports.getDonates = async queryParam => {
-  const apiFeatures = new ApiFeatures(Donate.find(), queryParam).filter();
+  const apiFeatures = new ApiFeatures(Donate.find(), queryParam).filter().fields();
   const donates = await apiFeatures.query;
   return donates;
 };
