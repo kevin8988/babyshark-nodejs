@@ -70,4 +70,14 @@ module.exports = class ApiFeatures {
     }
     return this;
   }
+
+  sort() {
+    if (this.queryParam.sort) {
+      const sort = this.queryParam.sort.split(',').join(' ');
+      this.query = this.query.sort(sort);
+    } else {
+      this.query = this.query.sort('-createdAt');
+    }
+    return this;
+  }
 };
