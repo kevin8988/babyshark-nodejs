@@ -1,12 +1,14 @@
 const Donate = require('../models/Donate');
+const ApiFeatures = require('./../utils/apiFeatures');
 
 exports.create = async data => {
   const donate = await Donate.create(data);
   return donate;
 };
 
-exports.getDonates = async () => {
-  const donates = await Donate.find();
+exports.getDonates = async queryParam => {
+  const apiFeatures = new ApiFeatures(Donate.find(), queryParam).filter();
+  const donates = await apiFeatures.query;
   return donates;
 };
 
