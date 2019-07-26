@@ -10,7 +10,8 @@ exports.getDonates = async queryParam => {
   const apiFeatures = new ApiFeatures(Donate.find(), queryParam)
     .filter()
     .fields()
-    .sort();
+    .sort()
+    .paginate();
   const donates = await apiFeatures.query;
   return donates;
 };
