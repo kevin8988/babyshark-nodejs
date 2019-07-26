@@ -9,10 +9,19 @@ const databaseUrl = {
   development: process.env.DATABASE_URL_LOCALHOST
 };
 
-mongoose.connect(databaseUrl[process.env.NODE_ENV.trim()], {
-  useNewUrlParser: true,
-  useFindAndModify: false,
-  useCreateIndex: true
-});
+mongoose.connect(
+  databaseUrl[process.env.NODE_ENV.trim()],
+  {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+  },
+  () => {
+    console.log('Database connected');
+  }
+);
 
-app.listen(process.env.PORT || 3333);
+const port = process.env.PORT || 3333;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
