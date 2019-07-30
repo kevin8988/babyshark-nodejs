@@ -5,7 +5,7 @@ const AppError = require('./../utils/appError');
 exports.getDonates = catchAsync(async (req, res, next) => {
   const { query } = req;
   const donates = await donateDAO.getDonates(query);
-  res.status(200).json({ status: 'success', data: { donates } });
+  res.status(200).json({ status: 'success', results: donates.length, data: { donates } });
 });
 
 exports.getDonate = catchAsync(async (req, res, next) => {

@@ -49,10 +49,16 @@ const donateSchema = new mongoose.Schema({
       trim: true
     }
   ],
+  isDonated: Boolean,
   createdAt: {
     type: Date,
     default: Date.now()
   }
+});
+
+donateSchema.pre('save', function(next) {
+  this.isDonated = false;
+  next();
 });
 
 const Donate = mongoose.model('Donate', donateSchema);
