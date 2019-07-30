@@ -61,6 +61,11 @@ donateSchema.pre('save', function(next) {
   next();
 });
 
+donateSchema.pre(/^find/, function(next) {
+  this.find({ isDonated: { $ne: true } });
+  next();
+});
+
 const Donate = mongoose.model('Donate', donateSchema);
 
 module.exports = Donate;

@@ -25,6 +25,11 @@ const handleCastErrorDB = err => {
   return new AppError(`Invalid ID ${err.value}`, 400);
 };
 
+const handleDuplicateErrorDB = err => {
+  const field = err.errmsg.split(':');
+  return new AppError(`Duplicate field ${field[2]}`, 400);
+};
+
 module.exports = (err, req, res, next) => {
   err.status = err.status || 'error';
   err.statusCode = err.statusCode || 500;
@@ -34,6 +39,7 @@ module.exports = (err, req, res, next) => {
   } else if (process.env.NODE_ENV.trim() === 'production') {
     if (err.name === 'ValidationError') err = handleValidationErrorDB(err);
     if (err.name === 'CastError') err = handleCastErrorDB(err);
+    if (err.code === 11000) err = handleDuplicateErrorDB(err);
     sendProdResponse(res, err);
   }
 };
