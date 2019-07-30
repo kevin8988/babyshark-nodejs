@@ -1,51 +1,32 @@
 const donateDAO = require('./../dao/donateDAO');
+const catchAsync = require('./../utils/catchAsync');
 
-exports.getDonates = async (req, res) => {
-  try {
-    const { query } = req;
-    const donates = await donateDAO.getDonates(query);
-    res.status(200).json({ status: 'success', data: { donates } });
-  } catch (error) {
-    res.status(404).json({ status: 'fail', message: error });
-  }
-};
+exports.getDonates = catchAsync(async (req, res, next) => {
+  const { query } = req;
+  const donates = await donateDAO.getDonates(query);
+  res.status(200).json({ status: 'success', data: { donates } });
+});
 
-exports.getDonate = async (req, res) => {
-  try {
-    const { params } = req;
-    const donate = await donateDAO.getDonate(params.id);
-    res.status(200).json({ status: 'success', data: { donate } });
-  } catch (error) {
-    res.status(404).json({ status: 'fail', message: error });
-  }
-};
+exports.getDonate = catchAsync(async (req, res) => {
+  const { params } = req;
+  const donate = await donateDAO.getDonate(params.id);
+  res.status(200).json({ status: 'success', data: { donate } });
+});
 
-exports.createDonate = async (req, res) => {
-  try {
-    const { body } = req;
-    const donate = await donateDAO.create(body);
-    res.status(201).json({ status: 'success', data: { donate } });
-  } catch (error) {
-    res.status(400).json({ status: 'fail', message: error });
-  }
-};
+exports.createDonate = catchAsync(async (req, res) => {
+  const { body } = req;
+  const donate = await donateDAO.create(body);
+  res.status(201).json({ status: 'success', data: { donate } });
+});
 
-exports.updateDonate = async (req, res) => {
-  try {
-    const { params, body } = req;
-    const donate = await donateDAO.update(params.id, body);
-    res.status(200).json({ status: 'success', data: { donate } });
-  } catch (error) {
-    res.status(404).json({ status: 'fail', message: error });
-  }
-};
+exports.updateDonate = catchAsync(async (req, res) => {
+  const { params, body } = req;
+  const donate = await donateDAO.update(params.id, body);
+  res.status(200).json({ status: 'success', data: { donate } });
+});
 
-exports.deleteDonate = async (req, res) => {
-  try {
-    const { params } = req;
-    await donateDAO.delete(params.id);
-    res.status(204).send({ status: 'success', data: null });
-  } catch (error) {
-    res.status(404).send({ status: 'success', message: error });
-  }
-};
+exports.deleteDonate = catchAsync(async (req, res) => {
+  const { params } = req;
+  await donateDAO.delete(params.id);
+  res.status(204).send({ status: 'success', data: null });
+});
