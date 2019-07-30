@@ -21,13 +21,15 @@ const donateSchema = new mongoose.Schema({
     required: [true, 'A donate must have a informations'],
     trim: true
   },
-  images: [
-    {
-      type: String,
-      required: [true, 'A donate must have a image'],
-      trim: true
+  images: {
+    type: [String],
+    validate: {
+      validator: function(value) {
+        return this.images.length !== 0;
+      },
+      message: 'A donate must have an image'
     }
-  ],
+  },
   colors: [
     {
       type: String,
