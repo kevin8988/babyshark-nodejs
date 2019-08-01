@@ -21,36 +21,10 @@ const donateSchema = new mongoose.Schema({
     required: [true, 'A donate must have a informations'],
     trim: true
   },
-  images: {
-    type: [String],
-    validate: {
-      validator: function(value) {
-        return this.images.length !== 0;
-      },
-      message: 'A donate must have an image'
-    }
-  },
-  colors: [
-    {
-      type: String,
-      required: [true, 'A donate must have a color'],
-      trim: true
-    }
-  ],
-  categories: [
-    {
-      type: String,
-      required: [true, 'A donate must have a category'],
-      trim: true
-    }
-  ],
-  genders: [
-    {
-      type: String,
-      required: [true, 'A donate must have a gender'],
-      trim: true
-    }
-  ],
+  images: [String],
+  colors: [String],
+  categories: [String],
+  genders: [String],
   isDonated: Boolean,
   createdAt: {
     type: Date,
