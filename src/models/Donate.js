@@ -26,9 +26,13 @@ const donateSchema = new mongoose.Schema(
     colors: [String],
     categories: [String],
     genders: [String],
-    isDonated: Boolean
+    isDonated: Boolean,
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User'
+    }
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 donateSchema.pre('save', function(next) {
