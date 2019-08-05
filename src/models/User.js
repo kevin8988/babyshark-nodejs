@@ -23,13 +23,22 @@ const userSchema = new mongoose.Schema(
       trim: true
     }
   },
-  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+    timestamps: true
+  }
 );
 
 userSchema.virtual('donates', {
   ref: 'Donate',
   foreignField: 'user',
   localField: '_id'
+});
+
+userSchema.pre(/^find/, function(next) {
+  this.populate('donates');
+  next();
 });
 
 const User = mongoose.model('User', userSchema);
