@@ -1,36 +1,35 @@
 const mongoose = require('mongoose');
 
-const donateSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, 'A donate must have a title'],
-    trim: true
+const donateSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: [true, 'A donate must have a title'],
+      trim: true
+    },
+    summary: {
+      type: String,
+      required: [true, 'A donate must have a summary'],
+      trim: true
+    },
+    description: {
+      type: String,
+      required: [true, 'A donate must have a description'],
+      trim: true
+    },
+    information: {
+      type: String,
+      required: [true, 'A donate must have a informations'],
+      trim: true
+    },
+    images: [String],
+    colors: [String],
+    categories: [String],
+    genders: [String],
+    isDonated: Boolean
   },
-  summary: {
-    type: String,
-    required: [true, 'A donate must have a summary'],
-    trim: true
-  },
-  description: {
-    type: String,
-    required: [true, 'A donate must have a description'],
-    trim: true
-  },
-  information: {
-    type: String,
-    required: [true, 'A donate must have a informations'],
-    trim: true
-  },
-  images: [String],
-  colors: [String],
-  categories: [String],
-  genders: [String],
-  isDonated: Boolean,
-  createdAt: {
-    type: Date,
-    default: Date.now()
-  }
-});
+  { timestamps: true }
+);
 
 donateSchema.pre('save', function(next) {
   this.isDonated = false;
