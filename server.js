@@ -1,4 +1,5 @@
 const dotenv = require('dotenv');
+const db = require('./app/models/index.js');
 
 dotenv.config();
 
@@ -8,6 +9,15 @@ const app = require('./app');
   production: process.env.DATABASE_URL.replace('<PASSWORD>', process.env.DATABASE_PASSWORD),
   development: process.env.DATABASE_URL_LOCALHOST
 }; */
+
+db.sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 
 const port = process.env.PORT || 3333;
 app.listen(port, () => {
