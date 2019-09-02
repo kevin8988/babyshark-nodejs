@@ -18,8 +18,6 @@ exports.getUser = (req, res) => {
 };
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  console.log(User);
-
   try {
     const user = await User.create(req.body);
     res.status(200).json({
@@ -27,7 +25,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
       data: { user }
     });
   } catch (error) {
-    console.log(error);
+    return next(error);
   }
 });
 
