@@ -1,9 +1,10 @@
 const catchAsync = require('./../utils/catchAsync');
-const userDAO = require('./../dao/userDAO');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await userDAO.getAllUsers();
-  res.status(200).json({ status: 'success', results: users.length, data: { users } });
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not working yet'
+  });
 });
 
 exports.getUser = (req, res) => {
@@ -14,8 +15,10 @@ exports.getUser = (req, res) => {
 };
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  const newUser = await userDAO.createUser(req.body);
-  res.status(201).json({ status: 'success', data: { user: newUser } });
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not working yet'
+  });
 });
 
 exports.updateUser = (req, res) => {
