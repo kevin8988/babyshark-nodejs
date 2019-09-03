@@ -1,9 +1,12 @@
 module.exports = (sequelize, DataTypes) => {
   const Donate = sequelize.define('Donate', {
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING
+    title: DataTypes.STRING,
+    description: DataTypes.STRING
   });
+
+  Donate.associate = function(models) {
+    Donate.belongsTo(models.User, { foreignKey: 'userId' });
+  };
 
   return Donate;
 };

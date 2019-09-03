@@ -20,6 +20,18 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING
       },
+      confirmPassword: {
+        allowNull: false,
+        type: DataTypes.STRING
+      },
+      active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      },
+      role: {
+        type: DataTypes.STRING,
+        defaultValue: 'user'
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE
