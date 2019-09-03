@@ -1,5 +1,6 @@
 const catchAsync = require('./../utils/catchAsync');
 const { Donate } = require('./../../app/models');
+const test = require('./../test/test');
 
 exports.getDonates = catchAsync(async (req, res, next) => {
   res.status(500).json({
@@ -17,10 +18,9 @@ exports.getDonate = catchAsync(async (req, res, next) => {
 
 exports.createDonate = catchAsync(async (req, res, next) => {
   try {
-    const donate = await Donate.create(req.body);
+    await test();
     res.status(200).json({
-      status: 'success',
-      data: { donate }
+      status: 'success'
     });
   } catch (error) {
     return next(error);

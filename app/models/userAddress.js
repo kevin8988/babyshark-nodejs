@@ -1,8 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
-  const UserAddress = sequelize.define('UserAddress', {
+  const UsersAddress = sequelize.define('UsersAddress', {
     city: DataTypes.STRING,
     state: DataTypes.STRING
   });
 
-  return UserAddress;
+  return UsersAddress;
 };
