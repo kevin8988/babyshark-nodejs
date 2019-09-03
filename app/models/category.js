@@ -3,5 +3,9 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING
   });
 
+  Category.associate = function(models) {
+    Category.belongsToMany(models.DonateCategory, { through: 'Donate_Category', foreignKey: 'categoryId' });
+  };
+
   return Category;
 };

@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     Donate.belongsTo(models.Color, { foreignKey: 'colorId' });
     Donate.belongsTo(models.Gender, { foreignKey: 'genderId' });
     Donate.belongsToMany(models.Interest, { through: 'User_Interest_Donate', foreignKey: 'donateId' });
+    Donate.belongsToMany(models.DonateCategory, { through: 'Donate_Category', foreignKey: 'categoryId' });
   };
 
   return Donate;
