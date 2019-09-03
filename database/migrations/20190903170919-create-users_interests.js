@@ -13,6 +13,7 @@ module.exports = {
       },
       status: {
         type: DataTypes.STRING,
+        allowNull: false,
         defaultValue: 'PENDENTE'
       },
       userId: {
