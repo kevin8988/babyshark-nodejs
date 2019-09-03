@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   Donate.associate = function(models) {
     Donate.belongsTo(models.User, { foreignKey: 'userId' });
     Donate.belongsTo(models.Color, { foreignKey: 'colorId' });
+    Donate.belongsTo(models.Gender, { foreignKey: 'genderId' });
     Donate.belongsToMany(models.Interest, { through: 'User_Interest_Donate', foreignKey: 'donateId' });
   };
 

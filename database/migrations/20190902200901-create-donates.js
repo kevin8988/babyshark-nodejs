@@ -27,6 +27,14 @@ module.exports = {
           key: 'id'
         }
       },
+      genderId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Genders',
+          key: 'id'
+        }
+      },
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
