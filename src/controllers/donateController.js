@@ -1,50 +1,42 @@
-const donateDAO = require('../dao/donateDAO');
+const catchAsync = require('./../utils/catchAsync');
+const { Donate } = require('./../../app/models');
 
-exports.getDonates = async (req, res) => {
-  try {
-    const donates = await donateDAO.getDonates();
-    res.status(200).json({ status: 'success', data: { donates } });
-  } catch (error) {
-    res.status(404).json({ status: 'fail', message: error });
-  }
-};
+exports.getDonates = catchAsync(async (req, res, next) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not working yet'
+  });
+});
 
-exports.getDonate = async (req, res) => {
-  try {
-    const { params } = req;
-    const donate = await donateDAO.getDonate(params.id);
-    res.status(200).json({ status: 'success', data: { donate } });
-  } catch (error) {
-    res.status(404).json({ status: 'fail', message: error });
-  }
-};
+exports.getDonate = catchAsync(async (req, res, next) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not working yet'
+  });
+});
 
-exports.createDonate = async (req, res) => {
+exports.createDonate = catchAsync(async (req, res, next) => {
   try {
-    const { body } = req;
-    const donate = await donateDAO.create(body);
-    res.status(201).json({ status: 'success', data: { donate } });
+    const donate = await Donate.create(req.body);
+    res.status(200).json({
+      status: 'success',
+      data: { donate }
+    });
   } catch (error) {
-    res.status(400).json({ status: 'fail', message: error });
+    return next(error);
   }
-};
+});
 
-exports.updateDonate = async (req, res) => {
-  try {
-    const { params, body } = req;
-    const donate = await donateDAO.update(params.id, body);
-    res.status(200).json({ status: 'success', data: { donate } });
-  } catch (error) {
-    res.status(404).json({ status: 'fail', message: error });
-  }
-};
+exports.updateDonate = catchAsync(async (req, res, next) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not working yet'
+  });
+});
 
-exports.deleteDonate = async (req, res) => {
-  try {
-    const { params } = req;
-    await donateDAO.delete(params.id);
-    res.status(204).send({ status: 'success', data: null });
-  } catch (error) {
-    res.status(404).send({ status: 'success', message: error });
-  }
-};
+exports.deleteDonate = catchAsync(async (req, res, next) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not working yet'
+  });
+});

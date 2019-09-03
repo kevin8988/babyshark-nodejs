@@ -1,9 +1,14 @@
-exports.getAllUsers = (req, res) => {
-  res.status(500).json({
+const { User } = require('./../../app/models');
+const catchAsync = require('./../utils/catchAsync');
+
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.findAll();
+
+  res.status(200).json({
     status: 'error',
-    message: 'This route is not working yet'
+    data: { users }
   });
-};
+});
 
 exports.getUser = (req, res) => {
   res.status(500).json({
@@ -12,12 +17,17 @@ exports.getUser = (req, res) => {
   });
 };
 
-exports.createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not working yet'
-  });
-};
+exports.createUser = catchAsync(async (req, res, next) => {
+  try {
+    const user = await User.create(req.body);
+    res.status(200).json({
+      status: 'success',
+      data: { user }
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
 
 exports.updateUser = (req, res) => {
   res.status(500).json({
