@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
-    return queryInterface.createTable('Donate_Category', {
+    return queryInterface.createTable('DonatesCategories', {
       categoryId: {
         primaryKey: true,
         type: DataTypes.INTEGER,
@@ -31,6 +31,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('Donate_Category');
+    return queryInterface.dropTable('DonatesCategories');
   }
 };

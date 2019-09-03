@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Category.associate = function(models) {
-    Category.belongsToMany(models.DonateCategory, { through: 'Donate_Category', foreignKey: 'categoryId' });
+    Category.belongsToMany(models.Donate, { through: 'DonatesCategories', foreignKey: 'categoryId' });
   };
 
   return Category;

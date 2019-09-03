@@ -1,8 +1,13 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
-    return queryInterface.createTable('User_Interest_Donate', {
-      userId: {
+    return queryInterface.createTable('UsersInterestsDonates', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
+        type: DataTypes.INTEGER
+      },
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -11,7 +16,6 @@ module.exports = {
         }
       },
       donateId: {
-        primaryKey: true,
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -41,6 +45,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('User_Interest_Donate');
+    return queryInterface.dropTable('UsersInterestsDonates');
   }
 };
