@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
   const Interest = sequelize.define('Interest', {
-    message: DataTypes.STRING,
-    status: DataTypes.STRING,
     userId: DataTypes.INTEGER,
-    donateId: DataTypes.INTEGER
+    donateId: DataTypes.INTEGER,
+    message: DataTypes.STRING,
+    status: DataTypes.STRING
   });
 
   Interest.associate = function(models) {

@@ -1,11 +1,23 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
     return queryInterface.createTable('User_Interest_Donate', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
+      userId: {
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id'
+        }
+      },
+      donateId: {
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Donates',
+          key: 'id'
+        }
       },
       message: {
         type: DataTypes.STRING,
@@ -16,22 +28,7 @@ module.exports = {
         allowNull: false,
         defaultValue: 'PENDENTE'
       },
-      userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Users',
-          key: 'id'
-        }
-      },
-      donateId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Donates',
-          key: 'id'
-        }
-      },
+
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE
