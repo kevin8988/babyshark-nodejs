@@ -15,6 +15,18 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING
       },
+      informations: {
+        allowNull: false,
+        type: DataTypes.STRING
+      },
+      colorId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Colors',
+          key: 'id'
+        }
+      },
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
