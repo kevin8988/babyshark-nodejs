@@ -32,6 +32,14 @@ module.exports = {
         type: DataTypes.STRING,
         defaultValue: 'user'
       },
+      userAddressId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'User_Address',
+          key: 'id'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

@@ -5,11 +5,13 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     confirmPassword: DataTypes.STRING,
     active: DataTypes.BOOLEAN,
-    role: DataTypes.STRING
+    role: DataTypes.STRING,
+    userAddressId: DataTypes.INTEGER
   });
 
   User.associate = function(models) {
     User.hasMany(models.Donate);
+    User.belongsTo(models.UserAddress, { foreignKey: 'userAddressId' });
     User.belongsToMany(models.Interest, { through: 'User_Interest_Donate', foreignKey: 'userId' });
   };
 
