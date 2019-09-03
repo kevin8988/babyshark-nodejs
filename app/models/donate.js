@@ -1,7 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   const Donate = sequelize.define('Donate', {
     title: DataTypes.STRING,
-    description: DataTypes.STRING
+    description: DataTypes.STRING,
+    userId: DataTypes.INTEGER
   });
 
   Donate.associate = function(models) {
