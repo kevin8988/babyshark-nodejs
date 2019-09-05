@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 
 dotenv.config();
-const db = require('./app/models/index.js');
+const db = require('./src/models/index');
 const app = require('./app');
 
 /* const databaseUrl = {

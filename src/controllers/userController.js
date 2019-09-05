@@ -1,6 +1,6 @@
-const { sequelize } = require('./../../app/models/index');
-const { User } = require('./../../app/models');
-const { UsersAddress } = require('./../../app/models');
+const { sequelize } = require('./../models/index');
+const { User } = require('./../models');
+const { UsersAddress } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
 

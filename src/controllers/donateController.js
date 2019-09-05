@@ -1,5 +1,5 @@
 const catchAsync = require('./../utils/catchAsync');
-const { Donate } = require('./../../app/models');
+const { Donate } = require('./../models');
 const test = require('./../test/test');
 
 exports.getDonates = catchAsync(async (req, res, next) => {

@@ -1,13 +1,13 @@
-const { Category } = require('./../../app/models');
-const { Color } = require('./../../app/models');
-const { Donate } = require('./../../app/models');
-const { DonatesPhoto } = require('./../../app/models');
-const { Gender } = require('./../../app/models');
-const { User } = require('./../../app/models');
-const { UsersAddress } = require('./../../app/models');
-const { UsersInterestsDonate } = require('./../../app/models');
-const { Event } = require('./../../app/models');
-const { EventsAddress } = require('./../../app/models');
+const { Category } = require('./../models');
+const { Color } = require('./../models');
+const { Donate } = require('./../models');
+const { DonatesPhoto } = require('./../models');
+const { Gender } = require('./../models');
+const { User } = require('./../models');
+const { UsersAddress } = require('./../models');
+const { UsersInterestsDonate } = require('./../models');
+const { Event } = require('./../models');
+const { EventsAddress } = require('./../models');
 
 module.exports = async () => {
   const userAddress = await UsersAddress.create({
