@@ -1,22 +1,25 @@
 const { User } = require('./../../app/models');
 const { UsersAddress } = require('./../../app/models');
 const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../../src/utils/appError');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.findAll();
 
-  res.status(200).json({
-    status: 'error',
-    data: { users }
-  });
+  res.status(200).json({ status: 'success', data: { users } });
 });
 
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not working yet'
-  });
-};
+exports.getUser = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    return next(new AppError('Nenhum usuário encontrado!', 404));
+  }
+
+  res.status(200).json({ status: 'success', data: { user } });
+});
 
 exports.createUser = catchAsync(async (req, res, next) => {
   const { firstName, lastName, email, password, confirmPassword } = req.body;
@@ -29,29 +32,34 @@ exports.createUser = catchAsync(async (req, res, next) => {
     confirmPassword
   });
 
-  const userAddress = await UsersAddress.create({
-    state: 'SP',
-    city: 'São Paulo'
-  });
+  const userAddress = await UsersAddress.create();
 
   await User.update({ userAddressId: userAddress.id }, { where: { id: user.id } });
 
-  res.status(201).json({
-    status: 'success',
-    data: { user }
-  });
+  res.status(201).json({ status: 'success', data: { user } });
 });
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not working yet'
-  });
-};
+exports.updateUser = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { firstName, lastName, email } = req.body;
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not working yet'
-  });
-};
+  const user = await User.update({ firstName, lastName, email }, { where: { id } });
+
+  if (!user[0]) {
+    return next(new AppError('Nenhum usuário encontrado', 404));
+  }
+
+  res.status(201).json({ status: 'success', message: 'Usuário foi atualizado!' });
+});
+
+exports.deleteUser = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const user = await User.update({ active: false }, { where: { id } });
+
+  if (!user[0]) {
+    return next(new AppError('Nenhum usuário encontrado', 404));
+  }
+
+  res.status(204).json({ status: 'success', data: null });
+});
