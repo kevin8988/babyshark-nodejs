@@ -4,8 +4,6 @@ const { UsersAddress } = require('./../../app/models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
 
-exports.cryptUserPassword = catchAsync(async (req, res, next) => {});
-
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.findAll();
 
@@ -50,7 +48,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
     res.status(201).json({ status: 'success', data: { user } });
   } catch (err) {
     if (transaction) await transaction.rollback();
-    next(err);
+    return next(err);
   }
 });
 

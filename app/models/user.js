@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -105,6 +107,12 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsTo(models.UsersAddress, { foreignKey: 'userAddressId' });
     User.belongsToMany(models.Donate, { through: 'UsersInterestsDonates', foreignKey: 'userId' });
   };
+
+  User.addHook('afterValidate', async user => {
+    const encryptedPassword = await bcrypt.hash(user.password, 12);
+    user.password = encryptedPassword;
+    user.confirmPassword = encryptedPassword;
+  });
 
   return User;
 };
