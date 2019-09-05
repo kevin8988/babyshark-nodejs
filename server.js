@@ -1,8 +1,8 @@
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 
 dotenv.config();
-const db = require('./src/models/index');
-const app = require('./app');
+const db = require("./src/models/index");
+const app = require("./app");
 
 /* const databaseUrl = {
   production: process.env.DATABASE_URL.replace('<PASSWORD>', process.env.DATABASE_PASSWORD),
@@ -12,10 +12,10 @@ const app = require('./app');
 db.sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
   .catch(err => {
-    console.error('Unable to connect to the database:', err);
+    console.error("Unable to connect to the database:", err);
   });
 
 const port = process.env.PORT || 3333;
