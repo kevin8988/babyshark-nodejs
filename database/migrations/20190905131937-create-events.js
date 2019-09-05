@@ -1,46 +1,41 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
-    return queryInterface.createTable('Users', {
+    return queryInterface.createTable('Events', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      firstName: {
-        allowNull: false,
-        type: DataTypes.STRING
+      day: {
+        type: DataTypes.DATE,
+        allowNull: false
       },
-      lastName: {
-        allowNull: false,
-        type: DataTypes.STRING
-      },
-      email: {
-        allowNull: false,
+      title: {
         type: DataTypes.STRING,
-        unique: true
+        allowNull: false
       },
-      password: {
-        allowNull: false,
-        type: DataTypes.STRING
-      },
-      confirmPassword: {
-        allowNull: false,
-        type: DataTypes.STRING
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false
       },
       active: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
       },
-      role: {
-        type: DataTypes.STRING,
-        defaultValue: 'user'
-      },
-      userAddressId: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'UsersAddresses',
+          model: 'Users',
+          key: 'id'
+        }
+      },
+      eventAddressId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'EventsAddresses',
           key: 'id'
         }
       },
@@ -56,6 +51,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('Events');
   }
 };
