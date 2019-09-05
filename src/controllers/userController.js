@@ -43,9 +43,9 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const { firstName, lastName, email } = req.body;
 
-  const user = await User.update({ firstName, lastName, email }, { where: { id } });
+  const rows = await User.update({ firstName, lastName, email }, { where: { id } });
 
-  if (!user[0]) {
+  if (!rows[0]) {
     return next(new AppError('Nenhum usuário encontrado', 404));
   }
 
@@ -55,9 +55,9 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 exports.deleteUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const user = await User.update({ active: false }, { where: { id } });
+  const rows = await User.update({ active: false }, { where: { id } });
 
-  if (!user[0]) {
+  if (!rows[0]) {
     return next(new AppError('Nenhum usuário encontrado', 404));
   }
 
