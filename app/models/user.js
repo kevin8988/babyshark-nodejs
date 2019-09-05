@@ -2,9 +2,12 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     firstName: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
-          args: true,
+          msg: 'Por favor, informe um nome!'
+        },
+        notNull: {
           msg: 'Por favor, informe um nome!'
         },
         len: {
@@ -18,10 +21,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     lastName: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
-          args: true,
-          msg: 'Por favor, informe um nome!'
+          msg: 'Por favor, informe um sobrenome!'
+        },
+        notNull: {
+          msg: 'Por favor, informe um sobrenome!'
         },
         len: {
           args: [3, 20],
@@ -31,36 +37,47 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
+      unique: {
+        msg: 'Ow, parece que já existe uma conta com esse e-mail!.'
+      },
       validate: {
         notEmpty: {
-          args: true,
+          msg: 'Por favor, informe um e-mail!'
+        },
+        notNull: {
           msg: 'Por favor, informe um e-mail!'
         },
         isEmail: {
-          args: true,
           msg: 'Por favor, informe um e-mail válido!'
         }
       }
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
-          args: true,
+          msg: 'Por favor, informe uma senha!'
+        },
+        notNull: {
           msg: 'Por favor, informe uma senha!'
         },
         len: {
           args: [6, 20],
-          msg: 'Por favor, informe um senha com no mínimo 6 caracteres!'
+          msg: 'Por favor, informe uma senha com no mínimo 6 caracteres!'
         }
       }
     },
     confirmPassword: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
-          args: true,
-          msg: 'Por favor, informe confirme sua senha!'
+          msg: 'Por favor, confirme sua senha!'
+        },
+        notNull: {
+          msg: 'Por favor, confirme sua senha!'
         },
         passwordMatch(value) {
           if (value !== this.password) {

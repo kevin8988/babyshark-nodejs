@@ -1,4 +1,5 @@
 const { User } = require('./../../app/models');
+const { UsersAddress } = require('./../../app/models');
 const catchAsync = require('./../utils/catchAsync');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
@@ -19,7 +20,23 @@ exports.getUser = (req, res) => {
 
 exports.createUser = catchAsync(async (req, res, next) => {
   try {
-    const user = await User.create(req.body);
+    const { firstName, lastName, email, password, confirmPassword } = req.body;
+
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword
+    });
+
+    const userAddress = await UsersAddress.create({
+      state: 'SP',
+      city: 'São Paulo'
+    });
+
+    await User.update({ userAddressId: userAddress.id }, { where: { id: user.id } });
+
     res.status(200).json({
       status: 'success',
       data: { user }

@@ -33,7 +33,6 @@ module.exports = {
       },
       eventAddressId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         references: {
           model: 'EventsAddresses',
           key: 'id'

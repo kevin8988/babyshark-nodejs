@@ -38,7 +38,6 @@ module.exports = {
       },
       userAddressId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         references: {
           model: 'UsersAddresses',
           key: 'id'
