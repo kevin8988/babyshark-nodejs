@@ -19,31 +19,27 @@ exports.getUser = (req, res) => {
 };
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  try {
-    const { firstName, lastName, email, password, confirmPassword } = req.body;
+  const { firstName, lastName, email, password, confirmPassword } = req.body;
 
-    const user = await User.create({
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword
-    });
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPassword
+  });
 
-    const userAddress = await UsersAddress.create({
-      state: 'SP',
-      city: 'São Paulo'
-    });
+  const userAddress = await UsersAddress.create({
+    state: 'SP',
+    city: 'São Paulo'
+  });
 
-    await User.update({ userAddressId: userAddress.id }, { where: { id: user.id } });
+  await User.update({ userAddressId: userAddress.id }, { where: { id: user.id } });
 
-    res.status(200).json({
-      status: 'success',
-      data: { user }
-    });
-  } catch (error) {
-    return next(error);
-  }
+  res.status(201).json({
+    status: 'success',
+    data: { user }
+  });
 });
 
 exports.updateUser = (req, res) => {
