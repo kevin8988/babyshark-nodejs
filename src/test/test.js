@@ -16,7 +16,8 @@ module.exports = async () => {
   });
 
   const userOne = await User.create({
-    name: 'Kevin',
+    firstName: 'Kevin',
+    lastName: 'Silva',
     email: 'kevsilva07@gmail.com',
     password: 'kev',
     confirmPassword: 'kev',
@@ -24,7 +25,8 @@ module.exports = async () => {
   });
 
   const userTwo = await User.create({
-    name: 'Luc',
+    firstName: 'Luc',
+    lastName: 'Silva',
     email: 'lucsilva07@gmail.com',
     password: 'luc',
     confirmPassword: 'luc',
