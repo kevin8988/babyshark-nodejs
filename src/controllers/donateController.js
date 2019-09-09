@@ -43,27 +43,15 @@ exports.updateDonate = catchAsync(async (req, res, next) => {
 
   const { title, description, informations, colorId, genderId, categoriesId, userId } = req.body;
 
-  await Donate.update(
-    {
-      title,
-      description,
-      informations,
-      colorId,
-      genderId,
-      userId
-    },
-    { where: { id } }
-  );
+  const donate = await Donate.findByPk(id);
+  await donate.update({ title, description, informations, colorId, genderId, userId });
 
   if (categoriesId) {
     const categories = await Promise.all(categoriesId.map(async el => await Category.findByPk(el)));
-
-    const donate = await Donate.findByPk(id);
-
     await donate.setCategories(categories);
   }
 
-  res.status(201).json({ status: 'success' });
+  res.status(201).json({ status: 'success', data: { donate } });
 });
 
 exports.deleteDonate = catchAsync(async (req, res, next) => {

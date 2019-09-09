@@ -83,8 +83,8 @@ module.exports = (sequelize, DataTypes) => {
     Donate.belongsToMany(models.Category, { through: 'DonatesCategories', foreignKey: 'donateId', as: 'categories' });
   };
 
-  Donate.addHook('afterUpdate', donate => {
-    console.log(donate.title);
+  Donate.addHook('beforeUpdate', donate => {
+    donate.slug = slugify(donate.title, { lower: true });
   });
 
   Donate.addHook('beforeCreate', donate => {
