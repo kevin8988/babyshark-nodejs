@@ -19,6 +19,9 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING
       },
+      slug: {
+        type: DataTypes.STRING
+      },
       colorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
