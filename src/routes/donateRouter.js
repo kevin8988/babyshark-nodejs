@@ -1,17 +1,18 @@
 const express = require('express');
 const donateController = require('../controllers/donateController');
+const authController = require('../controllers/authController');
 
 const router = express.Router();
 
 router
   .route('/')
   .get(donateController.getDonates)
-  .post(donateController.createDonate);
+  .post(authController.protect, donateController.createDonate);
 
 router
   .route('/:id')
   .get(donateController.getDonate)
-  .patch(donateController.updateDonate)
-  .delete(donateController.deleteDonate);
+  .patch(authController.protect, authController.restrictTo('admin'), donateController.updateDonate)
+  .delete(authController.protect, authController.restrictTo('admin'), donateController.deleteDonate);
 
 module.exports = router;
