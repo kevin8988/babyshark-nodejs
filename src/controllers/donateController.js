@@ -39,10 +39,27 @@ exports.createDonate = catchAsync(async (req, res, next) => {
 });
 
 exports.updateDonate = catchAsync(async (req, res, next) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not working yet'
-  });
+  const { id } = req.params;
+
+  const { title, description, informations, colorId, genderId, categoriesId, userId } = req.body;
+
+  const donate = await Donate.update(
+    {
+      title,
+      description,
+      informations,
+      colorId,
+      genderId,
+      userId
+    },
+    { where: { id } }
+  );
+
+  const categories = await Promise.all(categoriesId.map(async el => await Category.findByPk(el)));
+
+  await donate.setCategories(categories);
+
+  res.status(201).json({ status: 'success', data: { donate } });
 });
 
 exports.deleteDonate = catchAsync(async (req, res, next) => {

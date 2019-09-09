@@ -37,9 +37,42 @@ module.exports = (sequelize, DataTypes) => {
     informations: DataTypes.STRING,
     slug: DataTypes.STRING,
     isDonated: DataTypes.BOOLEAN,
-    colorId: DataTypes.INTEGER,
-    genderId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
+    colorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe uma cor!'
+        },
+        notNull: {
+          msg: 'Por favor, informe uma cor!'
+        }
+      }
+    },
+    genderId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe um gênero!'
+        },
+        notNull: {
+          msg: 'Por favor, informe um gênero!'
+        }
+      }
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe um usuário!'
+        },
+        notNull: {
+          msg: 'Por favor, informe um usuário!'
+        }
+      }
+    }
   });
 
   Donate.associate = function(models) {
