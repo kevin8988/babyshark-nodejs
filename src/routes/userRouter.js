@@ -7,15 +7,17 @@ const router = express.Router();
 router.route('/signup').post(authController.signup);
 router.route('/login').post(authController.login);
 
+router.use(authController.protect, authController.restrictTo('admin'));
+
 router
   .route('/')
-  .get(authController.protect, userController.getAllUsers)
+  .get(userController.getAllUsers)
   .post(userController.createUser);
 
 router
   .route('/:id')
-  .get(authController.protect, userController.getUser)
-  .patch(authController.protect, userController.updateUser)
-  .delete(authController.protect, userController.deleteUser);
+  .get(userController.getUser)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
 
 module.exports = router;
