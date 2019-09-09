@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
           },
           len: {
             args: [3, 20],
-            msg: 'Por favor, informe um nome válido!'
+            msg: 'Por favor, informe um sobrenome válido!'
           }
         }
       },
