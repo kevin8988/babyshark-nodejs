@@ -1,11 +1,11 @@
-const { promisify } = require("util");
-const crypto = require("crypto");
-const jwt = require("jsonwebtoken");
-const { sequelize } = require("./../models/index");
-const { User } = require("./../models");
-const { UsersAddress } = require("./../models");
-const catchAsync = require("./../utils/CatchAsync");
-const AppError = require("./../utils/AppError");
+//const { promisify } = require('util');
+//const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const { sequelize } = require('./../models/index');
+const { User } = require('./../models');
+const { UsersAddress } = require('./../models');
+const catchAsync = require('./../utils/catchAsync');
+//const AppError = require('./../utils/appError');
 
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -20,12 +20,12 @@ const createSentToken = (user, statusCode, res) => {
     httpOnly: true
   };
 
-  if (process.env.NODE_ENV.trim() === "production") {
+  if (process.env.NODE_ENV.trim() === 'production') {
     cookieOptions.secure = true;
   }
 
-  res.cookie("jwt", token, cookieOptions);
-  res.status(statusCode).json({ status: "success", token, data: { user } });
+  res.cookie('jwt', token, cookieOptions);
+  res.status(statusCode).json({ status: 'success', token, data: { user } });
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -53,7 +53,6 @@ exports.signup = catchAsync(async (req, res, next) => {
 
     createSentToken(user, 201, res);
   } catch (err) {
-    console.log(err);
     if (transaction) await transaction.rollback();
     return next(err);
   }
