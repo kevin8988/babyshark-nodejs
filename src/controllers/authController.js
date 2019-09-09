@@ -1,4 +1,4 @@
-//const { promisify } = require('util');
+const { promisify } = require('util');
 //const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -62,15 +62,39 @@ exports.signup = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   const { password, email } = req.body;
 
-  // 1. Verify if has a password and email
   if (!password || !email) return next(new AppError('Por favor, informe seu e-mail e senha!', 400));
 
   const user = await User.scope('login').findOne({ where: { email } });
 
-  // 2. Verify if has a valid email and password
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return next(new AppError('E-mail/Senha incorreto', 401));
   }
 
   createSentToken(user, 200, res);
+});
+
+exports.protect = catchAsync(async (req, res, next) => {
+  let token;
+
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
+
+  if (!token) {
+    return next(new AppError('Por favor, faça o login para acessar esse recurso!', 401));
+  }
+
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  const currentUser = await User.findByPk(decoded.id);
+
+  if (!currentUser) {
+    return next(new AppError('O token que pertencia a esse usuário não existe mais! Por favor, faça o login novamente.', 401));
+  }
+
+  req.user = currentUser;
+
+  next();
 });
