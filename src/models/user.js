@@ -107,8 +107,6 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = function(models) {
-    User.hasMany(models.Donate);
-    User.hasMany(models.Event);
     User.belongsTo(models.UsersAddress, { foreignKey: 'userAddressId' });
     User.belongsToMany(models.Donate, { through: 'UsersInterestsDonates', foreignKey: 'userId' });
   };

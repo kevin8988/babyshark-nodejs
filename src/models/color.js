@@ -4,9 +4,5 @@ module.exports = (sequelize, DataTypes) => {
     hexCode: DataTypes.STRING
   });
 
-  Color.associate = function(models) {
-    Color.hasMany(models.Donate);
-  };
-
   return Color;
 };
