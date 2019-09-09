@@ -113,7 +113,7 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsToMany(models.Donate, { through: 'UsersInterestsDonates', foreignKey: 'userId' });
   };
 
-  User.addHook('afterValidate', async user => {
+  User.addHook('beforeCreate', async user => {
     const encryptedPassword = await bcrypt.hash(user.password, 12);
     user.password = encryptedPassword;
     user.confirmPassword = encryptedPassword;

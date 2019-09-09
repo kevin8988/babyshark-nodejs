@@ -16,11 +16,14 @@ module.exports = {
         type: DataTypes.STRING
       },
       informations: {
-        allowNull: false,
         type: DataTypes.STRING
       },
       slug: {
         type: DataTypes.STRING
+      },
+      isDonated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       },
       colorId: {
         type: DataTypes.INTEGER,

@@ -1,9 +1,42 @@
+const slugify = require('slugify');
+
 module.exports = (sequelize, DataTypes) => {
   const Donate = sequelize.define('Donate', {
-    title: DataTypes.STRING,
-    description: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe um título!'
+        },
+        notNull: {
+          msg: 'Por favor, informe um título!'
+        },
+        len: {
+          args: [8, 20],
+          msg: 'Por favor, informe um título válido!'
+        }
+      }
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe uma descrição!'
+        },
+        notNull: {
+          msg: 'Por favor, informe uma descrição!'
+        },
+        len: {
+          args: [60, 240],
+          msg: 'Por favor, informe uma descrição válida!'
+        }
+      }
+    },
     informations: DataTypes.STRING,
     slug: DataTypes.STRING,
+    isDonated: DataTypes.BOOLEAN,
     colorId: DataTypes.INTEGER,
     genderId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER
@@ -17,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
     Donate.belongsToMany(models.User, { through: 'UsersInterestsDonates', foreignKey: 'donateId' });
     Donate.belongsToMany(models.Category, { through: 'DonatesCategories', foreignKey: 'donateId', as: 'categories' });
   };
+
+  Donate.addHook('beforeCreate', donate => {
+    donate.slug = slugify(donate.title, { lower: true });
+  });
 
   return Donate;
 };
