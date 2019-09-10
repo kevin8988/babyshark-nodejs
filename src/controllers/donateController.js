@@ -17,9 +17,9 @@ exports.getDonates = catchAsync(async (req, res, next) => {
 });
 
 exports.getDonate = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
+  const { slug } = req.params;
 
-  const donate = await Donate.findAll({ where: { id }, include: [{ model: Color }, { model: Category }, { model: Gender }, { model: DonatesPhoto, as: 'Photos' }] });
+  const donate = await Donate.findOne({ where: { slug }, include: [{ model: Color }, { model: Category }, { model: Gender }, { model: DonatesPhoto, as: 'Photos' }] });
 
   if (!donate) {
     return next(new AppError('Nenhuma doação encontrada!', 404));

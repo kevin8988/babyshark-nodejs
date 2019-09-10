@@ -11,8 +11,9 @@ router
 
 router
   .route('/:id')
-  .get(donateController.getDonate)
   .patch(authController.protect, authController.restrictTo('admin'), donateController.updateDonate)
   .delete(authController.protect, authController.restrictTo('admin'), donateController.deleteDonate);
+
+router.route('/:slug').get(donateController.getDonate);
 
 module.exports = router;
