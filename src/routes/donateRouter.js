@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/')
   .get(donateController.getDonates)
-  .post(authController.protect, donateController.createDonate);
+  .post(authController.protect, donateController.uploadDonatesImages, donateController.resizeDonatesImages, donateController.createDonate);
 
 router
   .route('/:id')
