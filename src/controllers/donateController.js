@@ -87,7 +87,7 @@ exports.deleteDonate = catchAsync(async (req, res, next) => {
     await transaction.commit();
   } catch (err) {
     if (transaction) await transaction.rollback();
-    return next(err);
+    return next(new AppError('Não foi possível concluir a ação!', 403));
   }
 
   res.status(204).json({ status: 'success', data: null });
