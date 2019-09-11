@@ -1,8 +1,5 @@
-const multer = require('multer');
 const sharp = require('sharp');
 const { saveFile } = require('./../utils/awsS3');
-const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../../src/utils/appError');
 const { sequelize } = require('./../models/index');
 const { Donate } = require('./../models');
 const { Category } = require('./../models');
@@ -10,30 +7,9 @@ const { Color } = require('./../models');
 const { Gender } = require('./../models');
 const { DonatesPhoto } = require('./../models');
 const { DonatesCategory } = require('./../models');
-
-const multerStorage = multer.memoryStorage();
-
-const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    const err = new AppError('Por favor, insira somente imagens!', 400);
-    cb(err, false);
-  }
-};
-
-const upload = multer({
-  storage: multerStorage,
-  fileFilter: multerFilter
-});
-
-exports.uploadDonatesImages = upload.fields([{ name: 'photos', maxCount: 3 }]);
-
-exports.verifyDonatesImages = catchAsync(async (req, res, next) => {
-  if (!req.files.photos) return next(new AppError('A doação deve conter pelo menos uma imagem!', 400));
-
-  next();
-});
+const multer = require('./../../config/multer');
+const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../../src/utils/appError');
 
 const resizeDonateImages = async (req, res, next) => {
   const paths = [];
@@ -55,6 +31,13 @@ const resizeDonateImages = async (req, res, next) => {
 
   return paths;
 };
+
+exports.uploadDonatesImages = multer.fields([{ name: 'photos', maxCount: 3 }]);
+
+exports.verifyDonatesImages = catchAsync(async (req, res, next) => {
+  if (!req.files.photos) return next(new AppError('A doação deve conter pelo menos uma imagem!', 400));
+  next();
+});
 
 exports.getDonates = catchAsync(async (req, res, next) => {
   const donates = await Donate.findAll({
