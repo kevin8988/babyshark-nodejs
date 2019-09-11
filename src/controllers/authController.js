@@ -55,7 +55,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     createSentToken(user, 201, res);
   } catch (err) {
     if (transaction) await transaction.rollback();
-    return next(new AppError('Não foi possível concluir a ação!', 403));
+    return next(err);
   }
 });
 

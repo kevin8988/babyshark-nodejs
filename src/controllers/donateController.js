@@ -1,5 +1,6 @@
 const multer = require('multer');
 const sharp = require('sharp');
+const { saveFile } = require('./../utils/awsS3');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
 const { sequelize } = require('./../models/index');
@@ -28,25 +29,32 @@ const upload = multer({
 
 exports.uploadDonatesImages = upload.fields([{ name: 'photos', maxCount: 3 }]);
 
-exports.resizeDonatesImages = catchAsync(async (req, res, next) => {
+exports.verifyDonatesImages = catchAsync(async (req, res, next) => {
   if (!req.files.photos) return next(new AppError('A doação deve conter pelo menos uma imagem!', 400));
 
-  req.body.photos = [];
+  next();
+});
+
+const resizeDonateImages = async (req, res, next) => {
+  const paths = [];
 
   await Promise.all(
     req.files.photos.map(async (file, index) => {
       const filename = `donate-${req.body.title.replace(/ /g, '-')}-${Date.now()}-${index + 1}.jpeg`;
-      await sharp(file.buffer)
+
+      const fileBuffer = await sharp(file.buffer)
         .resize(500, 500)
         .toFormat('jpeg')
         .jpeg({ quality: 90 })
-        .toFile(`public/img/${filename}`);
-      req.body.photos.push(filename);
+        .toBuffer();
+
+      const path = saveFile(fileBuffer, filename, req.user.id, next);
+      paths.push(path);
     })
   );
 
-  next();
-});
+  return paths;
+};
 
 exports.getDonates = catchAsync(async (req, res, next) => {
   const donates = await Donate.findAll({
@@ -69,36 +77,43 @@ exports.getDonate = catchAsync(async (req, res, next) => {
 });
 
 exports.createDonate = catchAsync(async (req, res, next) => {
-  const { title, description, informations, colorId, genderId, categoriesId, photos } = req.body;
+  const { title, description, informations, colorId, genderId, categoriesId } = req.body;
 
   let transaction;
 
   try {
     transaction = await sequelize.transaction();
 
-    const donate = await Donate.create({
-      title,
-      description,
-      informations,
-      colorId,
-      genderId,
-      userId: req.user.id
-    });
+    const donate = await Donate.create(
+      {
+        title,
+        description,
+        informations,
+        colorId,
+        genderId,
+        userId: req.user.id
+      },
+      { transaction }
+    );
 
     if (!categoriesId) {
       return new AppError('Doação deve ter categorias!', 400);
     }
 
-    const categories = await Promise.all(categoriesId.split(',').map(async el => await Category.findByPk(el)));
-    await donate.setCategories(categories);
+    const categories = await Promise.all(categoriesId.split(',').map(async el => await Category.findByPk(el, { transaction })));
+    await donate.setCategories(categories, { transaction });
 
-    const donatesPhotos = await Promise.all(photos.map(async el => await DonatesPhoto.create({ path: el, donateId: donate.id })));
-    await donate.setPhotos(donatesPhotos);
+    const paths = await resizeDonateImages(req, res, next);
+
+    const donatesPhotos = await Promise.all(paths.map(async el => await DonatesPhoto.create({ path: el, donateId: donate.id }, { transaction })));
+    await donate.setPhotos(donatesPhotos, { transaction });
+
+    await transaction.commit();
 
     res.status(201).json({ status: 'success', data: { donate } });
   } catch (err) {
     if (transaction) await transaction.rollback();
-    return next(new AppError('Não foi possível concluir a ação!', 403));
+    return next(err);
   }
 });
 
