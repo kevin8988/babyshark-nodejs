@@ -11,7 +11,7 @@ const multer = require('./../../config/multer');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
 
-const resizeDonateImages = async (req, res, next) => {
+const resizeAndSaveDonateImages = async (req, res, next) => {
   const paths = [];
 
   await Promise.all(
@@ -86,7 +86,7 @@ exports.createDonate = catchAsync(async (req, res, next) => {
     const categories = await Promise.all(categoriesId.split(',').map(async el => await Category.findByPk(el, { transaction })));
     await donate.setCategories(categories, { transaction });
 
-    const paths = await resizeDonateImages(req, res, next);
+    const paths = await resizeAndSaveDonateImages(req, res, next);
 
     const donatesPhotos = await Promise.all(paths.map(async el => await DonatesPhoto.create({ path: el, donateId: donate.id }, { transaction })));
     await donate.setPhotos(donatesPhotos, { transaction });
