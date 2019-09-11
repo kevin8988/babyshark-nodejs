@@ -3,9 +3,5 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING
   });
 
-  Gender.associate = function(models) {
-    Gender.hasMany(models.Donate);
-  };
-
   return Gender;
 };

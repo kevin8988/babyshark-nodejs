@@ -1,21 +1,100 @@
+const slugify = require('slugify');
+
+const createSlug = title => {
+  return slugify(`${title}-${Date.now()}`, { lower: true });
+};
+
 module.exports = (sequelize, DataTypes) => {
   const Donate = sequelize.define('Donate', {
-    title: DataTypes.STRING,
-    description: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe um título!'
+        },
+        notNull: {
+          msg: 'Por favor, informe um título!'
+        },
+        len: {
+          args: [8, 20],
+          msg: 'Por favor, informe um título válido!'
+        }
+      }
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe uma descrição!'
+        },
+        notNull: {
+          msg: 'Por favor, informe uma descrição!'
+        },
+        len: {
+          args: [60, 240],
+          msg: 'Por favor, informe uma descrição válida!'
+        }
+      }
+    },
     informations: DataTypes.STRING,
-    colorId: DataTypes.INTEGER,
-    genderId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
+    slug: DataTypes.STRING,
+    isDonated: DataTypes.BOOLEAN,
+    colorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe uma cor!'
+        },
+        notNull: {
+          msg: 'Por favor, informe uma cor!'
+        }
+      }
+    },
+    genderId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe um gênero!'
+        },
+        notNull: {
+          msg: 'Por favor, informe um gênero!'
+        }
+      }
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe um usuário!'
+        },
+        notNull: {
+          msg: 'Por favor, informe um usuário!'
+        }
+      }
+    }
   });
 
   Donate.associate = function(models) {
-    Donate.hasMany(models.DonatesPhoto);
+    Donate.hasMany(models.DonatesPhoto, { as: 'Photos' });
     Donate.belongsTo(models.User, { foreignKey: 'userId' });
     Donate.belongsTo(models.Color, { foreignKey: 'colorId' });
     Donate.belongsTo(models.Gender, { foreignKey: 'genderId' });
     Donate.belongsToMany(models.User, { through: 'UsersInterestsDonates', foreignKey: 'donateId' });
-    Donate.belongsToMany(models.Category, { through: 'DonatesCategories', foreignKey: 'donateId', as: 'categories' });
+    Donate.belongsToMany(models.Category, { through: 'DonatesCategories', foreignKey: 'donateId' });
   };
+
+  Donate.addHook('beforeUpdate', donate => {
+    donate.slug = createSlug(donate.title);
+  });
+
+  Donate.addHook('beforeCreate', donate => {
+    donate.slug = createSlug(donate.title);
+  });
 
   return Donate;
 };

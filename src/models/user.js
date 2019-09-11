@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
           },
           len: {
             args: [3, 20],
-            msg: 'Por favor, informe um nome válido!'
+            msg: 'Por favor, informe um sobrenome válido!'
           }
         }
       },
@@ -97,18 +97,21 @@ module.exports = (sequelize, DataTypes) => {
     {
       defaultScope: {
         attributes: { exclude: ['password', 'confirmPassword'] }
+      },
+      scopes: {
+        login: {
+          where: { active: true }
+        }
       }
     }
   );
 
   User.associate = function(models) {
-    User.hasMany(models.Donate);
-    User.hasMany(models.Event);
     User.belongsTo(models.UsersAddress, { foreignKey: 'userAddressId' });
     User.belongsToMany(models.Donate, { through: 'UsersInterestsDonates', foreignKey: 'userId' });
   };
 
-  User.addHook('afterValidate', async user => {
+  User.addHook('beforeCreate', async user => {
     const encryptedPassword = await bcrypt.hash(user.password, 12);
     user.password = encryptedPassword;
     user.confirmPassword = encryptedPassword;

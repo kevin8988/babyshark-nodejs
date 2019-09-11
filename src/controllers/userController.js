@@ -1,6 +1,4 @@
-const { sequelize } = require('./../models/index');
 const { User } = require('./../models');
-const { UsersAddress } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
 
@@ -23,33 +21,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  let transaction;
-  const { firstName, lastName, email, password, confirmPassword } = req.body;
-
-  try {
-    transaction = await sequelize.transaction();
-
-    const userAddress = await UsersAddress.create({}, { transaction });
-
-    const user = await User.create(
-      {
-        firstName,
-        lastName,
-        email,
-        password,
-        confirmPassword,
-        userAddressId: userAddress.id
-      },
-      { transaction }
-    );
-
-    await transaction.commit();
-
-    res.status(201).json({ status: 'success', data: { user } });
-  } catch (err) {
-    if (transaction) await transaction.rollback();
-    return next(err);
-  }
+  res.status(400).json({ status: 'error', message: 'Por favor, utilize o sign in!' });
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {

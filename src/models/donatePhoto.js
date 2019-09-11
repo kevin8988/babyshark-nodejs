@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   DonatesPhoto.associate = function(models) {
-    DonatesPhoto.belongsTo(models.Donate, { foreignKey: 'donateId' });
+    DonatesPhoto.belongsTo(models.Donate, { foreignKey: 'donateId', as: 'Photos' });
   };
 
   return DonatesPhoto;
