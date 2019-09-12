@@ -5,11 +5,11 @@ const { DonatesPhoto } = require('./../models');
 const { UsersInterestsDonate } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
-const test = require('./../test/test');
+//const test = require('./../test/test');
 
 exports.getMe = async (req, res, next) => {
   req.params = { id: req.user.id };
-  await test();
+  //await test();
   next();
 };
 
@@ -32,9 +32,9 @@ exports.getMyInterests = catchAsync(async (req, res, next) => {
 exports.getMyDonatesInterests = catchAsync(async (req, res, next) => {
   const { id } = req.user;
 
-  const interests = await UsersInterestsDonate.findAll({ include: [{ model: Donate, where: { userId: id } }, { model: User }] });
+  const donatesInterests = await UsersInterestsDonate.findAll({ include: [{ model: Donate, where: { userId: id } }, { model: User }] });
 
-  res.status(200).json({ status: 'success', results: interests.length, data: { interests } });
+  res.status(200).json({ status: 'success', results: donatesInterests.length, data: { donatesInterests } });
 });
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
