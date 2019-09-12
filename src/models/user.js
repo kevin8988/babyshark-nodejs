@@ -109,6 +109,7 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function(models) {
     User.belongsTo(models.UsersAddress, { foreignKey: 'userAddressId' });
     User.belongsToMany(models.Donate, { through: 'UsersInterestsDonates', foreignKey: 'userId' });
+    User.belongsToMany(models.Event, { through: 'EventsUser', foreignKey: 'userId' });
   };
 
   User.addHook('beforeCreate', async user => {
