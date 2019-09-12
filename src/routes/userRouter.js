@@ -9,6 +9,7 @@ router.route('/login').post(authController.login);
 
 router.route('/me').get(authController.protect, userController.getMe, userController.getUser);
 router.route('/me/donates').get(authController.protect, userController.getMyDonates);
+router.route('/me/interests').get(authController.protect, userController.getMyInterests);
 
 router.use(authController.protect, authController.restrictTo('admin'));
 
