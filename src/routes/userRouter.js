@@ -7,6 +7,9 @@ const router = express.Router();
 router.route('/signup').post(authController.signup);
 router.route('/login').post(authController.login);
 
+router.route('/me').get(authController.protect, userController.getMe, userController.getUser);
+router.route('/me/donates').get(authController.protect, userController.getMyDonates);
+
 router.use(authController.protect, authController.restrictTo('admin'));
 
 router

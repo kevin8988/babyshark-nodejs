@@ -1,9 +1,25 @@
 const { User } = require('./../models');
+const { UsersAddress } = require('./../models');
+const { Donate } = require('./../models');
+const { DonatesPhoto } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
 
+exports.getMe = async (req, res, next) => {
+  req.params = { id: req.user.id };
+  next();
+};
+
+exports.getMyDonates = async (req, res, next) => {
+  const { id } = req.user;
+
+  const donates = await Donate.findAll({ where: { userId: id }, include: [{ model: DonatesPhoto, as: 'Photos' }] });
+
+  res.status(200).json({ status: 'success', results: donates.length, data: { donates } });
+};
+
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.findAll();
+  const users = await User.findAll({ include: [{ model: UsersAddress }] });
 
   res.status(200).json({ status: 'success', data: { users } });
 });
@@ -11,7 +27,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 exports.getUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const user = await User.findByPk(id);
+  const user = await User.findByPk(id, { include: [{ model: UsersAddress }] });
 
   if (!user) {
     return next(new AppError('Nenhum usuário encontrado!', 404));
