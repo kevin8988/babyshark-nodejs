@@ -16,6 +16,6 @@ router
   .delete(authController.protect, authController.restrictTo('admin'), donateController.deleteDonate);
 
 router.route('/:slug').get(donateController.getDonate);
-router.route('/:slug/interest').post(authController.protect, interestController.checkExistingInterest, interestController.createInterest);
+router.route('/:slug/interest').post(authController.protect, interestController.checkIfIsMyDonate, interestController.checkExistingInterest, interestController.createInterest);
 
 module.exports = router;
