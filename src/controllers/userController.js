@@ -24,7 +24,17 @@ exports.getMyDonates = catchAsync(async (req, res, next) => {
 exports.getMyInterests = catchAsync(async (req, res, next) => {
   const { id } = req.user;
 
-  const interests = await UsersInterestsDonate.findAll({ where: { userId: id }, include: [{ model: Donate, include: [{ model: DonatesPhoto, as: 'Photos' }, { model: User }] }] });
+  const interests = await UsersInterestsDonate.findAll({
+    attributes: ['id', 'message', 'status'],
+    where: { userId: id },
+    include: [
+      {
+        model: Donate,
+        attributes: ['id', 'title', 'description', 'informations', 'slug'],
+        include: [{ attributes: ['id', 'path'], model: DonatesPhoto, as: 'Photos' }, { attributes: ['id', 'firstName', 'lastName', 'email'], model: User }]
+      }
+    ]
+  });
 
   res.status(200).json({ status: 'success', results: interests.length, data: { interests } });
 });
