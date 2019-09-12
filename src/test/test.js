@@ -19,8 +19,8 @@ module.exports = async () => {
     firstName: 'Kevin',
     lastName: 'Silva',
     email: 'kevsilva07@gmail.com',
-    password: 'kev',
-    confirmPassword: 'kev',
+    password: 'kevluc',
+    confirmPassword: 'kevluc',
     userAddressId: userAddress.id
   });
 
@@ -28,8 +28,8 @@ module.exports = async () => {
     firstName: 'Luc',
     lastName: 'Silva',
     email: 'lucsilva07@gmail.com',
-    password: 'luc',
-    confirmPassword: 'luc',
+    password: 'lucluc',
+    confirmPassword: 'lucluc',
     userAddressId: userAddress.id
   });
 
@@ -41,7 +41,7 @@ module.exports = async () => {
   await Event.create({
     day: new Date(),
     title: 'Cool Event',
-    description: 'Cool',
+    description: 'Cool event baom',
     userId: userOne.id,
     eventAddressId: eventAddress.id
   });
@@ -65,8 +65,8 @@ module.exports = async () => {
 
   const donate = await Donate.create({
     title: 'roupa nova',
-    description: 'blabla',
-    informations: 'sadsad',
+    description: 'blabladsadasdsadasdassdlnjsajfjasfkbasdasjdasdasdhashdasjmdnbasdbashmdbasndsf',
+    informations: 'sadsaasdsadsadsadd',
     colorId: color.id,
     genderId: gender.id,
     userId: userOne.id

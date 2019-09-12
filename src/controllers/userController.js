@@ -5,27 +5,37 @@ const { DonatesPhoto } = require('./../models');
 const { UsersInterestsDonate } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
+const test = require('./../test/test');
 
 exports.getMe = async (req, res, next) => {
   req.params = { id: req.user.id };
+  await test();
   next();
 };
 
-exports.getMyDonates = async (req, res, next) => {
+exports.getMyDonates = catchAsync(async (req, res, next) => {
   const { id } = req.user;
 
   const donates = await Donate.findAll({ where: { userId: id }, include: [{ model: DonatesPhoto, as: 'Photos' }] });
 
   res.status(200).json({ status: 'success', results: donates.length, data: { donates } });
-};
+});
 
-exports.getMyInterests = async (req, res, next) => {
+exports.getMyInterests = catchAsync(async (req, res, next) => {
   const { id } = req.user;
 
-  const interests = await UsersInterestsDonate.findAll({ where: { userId: id } });
+  const interests = await UsersInterestsDonate.findAll({ where: { userId: id }, include: [{ model: Donate, include: [{ model: DonatesPhoto, as: 'Photos' }, { model: User }] }] });
 
   res.status(200).json({ status: 'success', results: interests.length, data: { interests } });
-};
+});
+
+exports.getMyDonatesInterests = catchAsync(async (req, res, next) => {
+  const { id } = req.user;
+
+  const interests = await UsersInterestsDonate.findAll({ include: [{ model: Donate, where: { userId: id } }, { model: User }] });
+
+  res.status(200).json({ status: 'success', results: interests.length, data: { interests } });
+});
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.findAll({ include: [{ model: UsersAddress }] });
