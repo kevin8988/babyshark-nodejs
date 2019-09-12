@@ -16,7 +16,7 @@ exports.getMe = async (req, res, next) => {
 exports.getMyDonates = catchAsync(async (req, res, next) => {
   const { id } = req.user;
 
-  const donates = await Donate.findAll({ where: { userId: id }, include: [{ model: DonatesPhoto, as: 'Photos' }] });
+  const donates = await Donate.findAll({ where: { userId: id }, include: [{ attributes: ['id', 'path'], model: DonatesPhoto, as: 'Photos' }] });
 
   res.status(200).json({ status: 'success', results: donates.length, data: { donates } });
 });
