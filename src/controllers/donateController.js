@@ -1,5 +1,5 @@
 const sharp = require('sharp');
-const { saveFile } = require('./../utils/awsS3');
+const { saveFile, deleteFile } = require('./../utils/awsS3');
 const { sequelize } = require('./../models/index');
 const { Donate } = require('./../models');
 const { Category } = require('./../models');
@@ -128,11 +128,20 @@ exports.deleteDonate = catchAsync(async (req, res, next) => {
   try {
     transaction = await sequelize.transaction();
 
+    const photos = await DonatesPhoto.findAll({ where: { donateId: id } });
+
+    const keys = photos.map(el => {
+      const key = el.dataValues.path.replace('https://imagens-donates.s3.amazonaws.com/', '');
+      return { Key: key };
+    });
+
     await DonatesPhoto.destroy({ where: { donateId: id } }, { transaction });
 
     await DonatesCategory.destroy({ where: { donateId: id } }, { transaction });
 
     await Donate.destroy({ where: { id } }, { transaction });
+
+    deleteFile(keys, next);
 
     await transaction.commit();
   } catch (err) {
