@@ -44,6 +44,14 @@ module.exports = {
           key: 'id'
         }
       },
+      userDetailId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'UsersDetails',
+          key: 'id'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

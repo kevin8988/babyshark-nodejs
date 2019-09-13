@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const { sequelize } = require('./../models/index');
 const { User } = require('./../models');
 const { UsersAddress } = require('./../models');
+const { UsersDetail } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
@@ -38,6 +39,8 @@ exports.signup = catchAsync(async (req, res, next) => {
 
     const userAddress = await UsersAddress.create({}, { transaction });
 
+    const userDetail = await UsersDetail.create({}, { transaction });
+
     const user = await User.create(
       {
         firstName,
@@ -45,7 +48,8 @@ exports.signup = catchAsync(async (req, res, next) => {
         email,
         password,
         confirmPassword,
-        userAddressId: userAddress.id
+        userAddressId: userAddress.id,
+        userDetailId: userDetail.id
       },
       { transaction }
     );

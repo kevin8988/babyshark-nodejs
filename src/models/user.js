@@ -92,7 +92,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       active: DataTypes.BOOLEAN,
       role: DataTypes.STRING,
-      userAddressId: DataTypes.INTEGER
+      userAddressId: DataTypes.INTEGER,
+      userDetailId: DataTypes.INTEGER
     },
     {
       defaultScope: {
@@ -108,6 +109,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function(models) {
     User.belongsTo(models.UsersAddress, { foreignKey: 'userAddressId' });
+    User.belongsTo(models.UsersDetail, { foreignKey: 'userDetailId' });
     User.belongsToMany(models.Donate, { through: 'UsersInterestsDonates', foreignKey: 'userId' });
     User.belongsToMany(models.Event, { through: 'EventsUser', foreignKey: 'userId' });
   };
