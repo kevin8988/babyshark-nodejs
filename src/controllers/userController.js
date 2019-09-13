@@ -1,5 +1,6 @@
 const { User } = require('./../models');
 const { UsersAddress } = require('./../models');
+const { UsersDetail } = require('./../models');
 const { Donate } = require('./../models');
 const { DonatesPhoto } = require('./../models');
 const { UsersInterestsDonate } = require('./../models');
@@ -48,7 +49,7 @@ exports.getMyDonatesInterests = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.findAll({ include: [{ model: UsersAddress }] });
+  const users = await User.findAll({ include: [{ model: UsersAddress }, { model: UsersDetail }] });
 
   res.status(200).json({ status: 'success', data: { users } });
 });
@@ -56,7 +57,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 exports.getUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const user = await User.findByPk(id, { include: [{ model: UsersAddress }] });
+  const user = await User.findByPk(id, { include: [{ model: UsersAddress }, { model: UsersDetail }] });
 
   if (!user) {
     return next(new AppError('Nenhum usuário encontrado!', 404));
