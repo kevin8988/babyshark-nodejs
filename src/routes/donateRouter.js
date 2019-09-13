@@ -17,5 +17,5 @@ router
 
 router.route('/:slug').get(donateController.getDonate);
 router.route('/:slug/interest').post(authController.protect, interestController.checkIfIsMyDonate, interestController.checkExistingInterest, interestController.createInterest);
-
+router.route('/:slug/interest/:id/accept').post(authController.protect, interestController.acceptInterest);
 module.exports = router;
