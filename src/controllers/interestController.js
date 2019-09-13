@@ -69,3 +69,18 @@ exports.acceptInterest = catchAsync(async (req, res, next) => {
 
   res.status(200).json({ status: 'success', data: { interest } });
 });
+
+exports.declineInterest = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { id: userId } = req.user;
+
+  const interest = await UsersInterestsDonate.findByPk(id, { include: [{ model: Donate }] });
+
+  if (!(interest.Donate.userId === userId)) {
+    return next(new AppError('Você não tem permissão para realizar essa ação!', 400));
+  }
+
+  await interest.update({ status: 'RECUSADO' });
+
+  res.status(200).json({ status: 'success', data: { interest } });
+});
