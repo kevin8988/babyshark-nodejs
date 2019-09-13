@@ -1,4 +1,5 @@
 const { Sequelize } = require('./../models/index');
+const { sequelize } = require('./../models/index');
 const { Donate } = require('./../models');
 const { UsersInterestsDonate } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
@@ -76,10 +77,22 @@ exports.acceptInterest = catchAsync(async (req, res, next) => {
   const { and, ne } = Sequelize.Op;
   const { interest } = req;
 
-  await interest.update({ status: 'ACEITO' });
-  await UsersInterestsDonate.update({ status: 'RECUSADO' }, { where: { [and]: [{ donateId: interest.donateId }, { id: { [ne]: interest.id } }] } });
+  let transaction;
 
-  res.status(200).json({ status: 'success', data: { interest } });
+  try {
+    transaction = await sequelize.transaction();
+
+    await Donate.update({ isDonated: true }, { where: { id: interest.donateId } });
+    await interest.update({ status: 'ACEITO' });
+    await UsersInterestsDonate.update({ status: 'RECUSADO' }, { where: { [and]: [{ donateId: interest.donateId }, { id: { [ne]: interest.id } }] } });
+
+    res.status(200).json({ status: 'success', data: { interest } });
+
+    await transaction.commit();
+  } catch (err) {
+    if (transaction) await transaction.rollback();
+    return next(new AppError('Não foi possível concluir a ação!', 403));
+  }
 });
 
 exports.declineInterest = catchAsync(async (req, res, next) => {
