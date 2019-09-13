@@ -4,7 +4,7 @@ const { UsersInterestsDonate } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
-exports.checkIfIsMyDonate = catchAsync(async (req, res, next) => {
+exports.checkIfIsNotMyDonate = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
   const { id } = req.user;
 
@@ -37,6 +37,25 @@ exports.checkExistingInterest = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.checkIfIsMyInterest = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { id: userId } = req.user;
+
+  const interest = await UsersInterestsDonate.findByPk(id, { include: [{ model: Donate }] });
+
+  if (!interest) {
+    return next(new AppError('Nenhum interesse encontrado!', 404));
+  }
+
+  if (!(interest.Donate.userId === userId)) {
+    return next(new AppError('Você não tem permissão para realizar essa ação!', 400));
+  }
+
+  req.interest = interest;
+
+  next();
+});
+
 exports.createInterest = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
   const { id } = req.user;
@@ -54,15 +73,8 @@ exports.createInterest = catchAsync(async (req, res, next) => {
 });
 
 exports.acceptInterest = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
   const { and, ne } = Sequelize.Op;
-  const { id: userId } = req.user;
-
-  const interest = await UsersInterestsDonate.findByPk(id, { include: [{ model: Donate }] });
-
-  if (!(interest.Donate.userId === userId)) {
-    return next(new AppError('Você não tem permissão para realizar essa ação!', 400));
-  }
+  const { interest } = req;
 
   await interest.update({ status: 'ACEITO' });
   await UsersInterestsDonate.update({ status: 'RECUSADO' }, { where: { [and]: [{ donateId: interest.donateId }, { id: { [ne]: interest.id } }] } });
@@ -71,14 +83,7 @@ exports.acceptInterest = catchAsync(async (req, res, next) => {
 });
 
 exports.declineInterest = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const { id: userId } = req.user;
-
-  const interest = await UsersInterestsDonate.findByPk(id, { include: [{ model: Donate }] });
-
-  if (!(interest.Donate.userId === userId)) {
-    return next(new AppError('Você não tem permissão para realizar essa ação!', 400));
-  }
+  const { interest } = req;
 
   await interest.update({ status: 'RECUSADO' });
 
