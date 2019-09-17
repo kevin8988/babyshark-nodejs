@@ -1,5 +1,10 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const cors = require('cors');
+const morgan = require('morgan');
+
 const donateRouter = require('./src/routes/donateRouter');
 const userRouter = require('./src/routes/userRouter');
 const eventRouter = require('./src/routes/eventRouter');
@@ -8,8 +13,15 @@ const AppError = require('./src/utils/appError');
 
 const app = express();
 
+app.use(cors());
+app.use(helmet());
+app.use(xss());
 app.use(express.json());
 app.use(cookieParser());
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.use('/api/v1/donates', donateRouter);
 app.use('/api/v1/users', userRouter);

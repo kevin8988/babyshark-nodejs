@@ -22,3 +22,16 @@ exports.saveFile = (file, fileName, userId, next) => {
 
   return url;
 };
+
+exports.deleteFile = (keys, next) => {
+  const params = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Delete: {
+      Objects: keys
+    }
+  };
+
+  s3.deleteObjects(params, function(s3Err) {
+    if (s3Err) return next(new AppError('Não foi possível salvar imagem da doação!', 403));
+  });
+};

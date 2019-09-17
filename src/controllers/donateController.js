@@ -1,5 +1,5 @@
 const sharp = require('sharp');
-const { saveFile } = require('./../utils/awsS3');
+const { saveFile, deleteFile } = require('./../utils/awsS3');
 const { sequelize } = require('./../models/index');
 const { Donate } = require('./../models');
 const { Category } = require('./../models');
@@ -11,7 +11,7 @@ const multer = require('./../../config/multer');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
 
-const resizeDonateImages = async (req, res, next) => {
+const resizeAndSaveDonateImages = async (req, res, next) => {
   const paths = [];
 
   await Promise.all(
@@ -36,6 +36,23 @@ exports.uploadDonatesImages = multer.fields([{ name: 'photos', maxCount: 3 }]);
 
 exports.verifyDonatesImages = catchAsync(async (req, res, next) => {
   if (!req.files.photos) return next(new AppError('A doação deve conter pelo menos uma imagem!', 400));
+  next();
+});
+
+exports.checkIfIsMyDonate = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { id: userId } = req.user;
+
+  const donate = await Donate.findByPk(id);
+
+  if (!donate) {
+    return next(new AppError('Nenhuma doação encontrada!', 400));
+  }
+
+  if (!(donate.userId === userId)) {
+    return next(new AppError('Você não tem permissão para realizar essa ação!', 400));
+  }
+
   next();
 });
 
@@ -86,7 +103,7 @@ exports.createDonate = catchAsync(async (req, res, next) => {
     const categories = await Promise.all(categoriesId.split(',').map(async el => await Category.findByPk(el, { transaction })));
     await donate.setCategories(categories, { transaction });
 
-    const paths = await resizeDonateImages(req, res, next);
+    const paths = await resizeAndSaveDonateImages(req, res, next);
 
     const donatesPhotos = await Promise.all(paths.map(async el => await DonatesPhoto.create({ path: el, donateId: donate.id }, { transaction })));
     await donate.setPhotos(donatesPhotos, { transaction });
@@ -128,11 +145,20 @@ exports.deleteDonate = catchAsync(async (req, res, next) => {
   try {
     transaction = await sequelize.transaction();
 
+    const photos = await DonatesPhoto.findAll({ where: { donateId: id } });
+
+    const keys = photos.map(el => {
+      const key = el.dataValues.path.replace('https://imagens-donates.s3.amazonaws.com/', '');
+      return { Key: key };
+    });
+
     await DonatesPhoto.destroy({ where: { donateId: id } }, { transaction });
 
     await DonatesCategory.destroy({ where: { donateId: id } }, { transaction });
 
     await Donate.destroy({ where: { id } }, { transaction });
+
+    deleteFile(keys, next);
 
     await transaction.commit();
   } catch (err) {
