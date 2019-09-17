@@ -15,6 +15,9 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false
       },
+      slug: {
+        type: DataTypes.STRING
+      },
       description: {
         type: DataTypes.STRING,
         allowNull: false
