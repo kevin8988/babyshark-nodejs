@@ -11,8 +11,8 @@ router
 
 router
   .route('/:id')
-  .patch(authController.protect, eventController.updateEvent)
-  .delete(authController.protect, eventController.deleteEvent);
+  .patch(authController.protect, authController.restrictTo('admin'), eventController.updateEvent)
+  .delete(authController.protect, authController.restrictTo('admin'), eventController.deleteEvent);
 
 router.route('/:slug').get(eventController.getEvent);
 
