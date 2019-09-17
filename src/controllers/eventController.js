@@ -1,17 +1,19 @@
 const catchAsync = require('./../utils/catchAsync');
+const { Event, EventsAddress, User } = require('./../models');
+const { sequelize } = require('./../models/index');
 
 exports.getAllEvents = catchAsync(async (req, res, next) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not working yet'
-  });
+  const events = Event.findAll({ include: [{ model: EventsAddress }] });
+
+  res.status(200).json({ status: 'success', results: events.length, data: { events } });
 });
 
 exports.getEvent = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not working yet'
-  });
+  const { slug } = req.params;
+
+  const event = Event.findOne({ where: { slug }, include: [{ model: EventsAddress }, { model: User }] });
+
+  res.status(200).json({ status: 'success', data: { event } });
 };
 
 exports.createEvent = (req, res) => {
