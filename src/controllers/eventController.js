@@ -15,6 +15,10 @@ exports.getEvent = catchAsync(async (req, res, next) => {
 
   const event = Event.findOne({ where: { slug }, include: [{ model: EventsAddress }, { model: User }] });
 
+  if (!event) {
+    return next(new AppError('Nenhum evento encontrado!', 400));
+  }
+
   res.status(200).json({ status: 'success', data: { event } });
 });
 
@@ -75,14 +79,23 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
 
   const event = await Event.findByPk(id);
 
+  if (!event) {
+    return next(new AppError('Nenhum evento encontrado!', 400));
+  }
+
   await event.update({ day, title, description });
 
   res.status(200).json({ status: 'success', data: { event } });
 });
 
 exports.deleteEvent = catchAsync(async (req, res, next) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not working yet'
-  });
+  const { id } = req.params;
+
+  const deletedEvent = await Event.destroy({ where: { id } });
+
+  if (!deletedEvent) {
+    return next(new AppError('Nenhum evento encontrado!', 400));
+  }
+
+  res.status(204).json({ status: 'success', data: null });
 });
