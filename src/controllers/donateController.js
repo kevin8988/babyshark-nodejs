@@ -39,6 +39,23 @@ exports.verifyDonatesImages = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.checkIfIsMyDonate = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { id: userId } = req.user;
+
+  const donate = await Donate.findByPk(id);
+
+  if (!donate) {
+    return next(new AppError('Nenhuma doação encontrada!', 400));
+  }
+
+  if (!(donate.userId === userId)) {
+    return next(new AppError('Você não tem permissão para realizar essa ação!', 400));
+  }
+
+  next();
+});
+
 exports.getDonates = catchAsync(async (req, res, next) => {
   const donates = await Donate.findAll({
     include: [{ model: Color }, { model: Category }, { model: Gender }, { model: DonatesPhoto, as: 'Photos' }]
