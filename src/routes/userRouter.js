@@ -2,6 +2,7 @@ const express = require('express');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 const eventController = require('../controllers/eventController');
+const donateController = require('../controllers/donateController');
 
 const router = express.Router();
 
@@ -13,6 +14,11 @@ router.route('/me/donates').get(authController.protect, userController.getMyDona
 router.route('/me/donates/interests').get(authController.protect, userController.getMyDonatesInterests);
 router.route('/me/interests').get(authController.protect, userController.getMyInterests);
 router.route('/me/events').get(authController.protect, userController.getMyEvents);
+
+router
+  .route('/me/donates/:id')
+  .patch(authController.protect, donateController.checkIfIsMyDonate, donateController.updateDonate)
+  .delete(authController.protect, donateController.checkIfIsMyDonate, donateController.deleteDonate);
 
 router
   .route('/me/events/:id')
