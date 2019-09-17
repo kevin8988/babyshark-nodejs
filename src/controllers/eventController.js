@@ -4,6 +4,23 @@ const AppError = require('./../utils/appError');
 const { Event, EventsAddress, User } = require('./../models');
 const { sequelize } = require('./../models/index');
 
+exports.checkIfIsMyEvent = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { id: userId } = req.user;
+
+  const event = await Event.findByPk(id);
+
+  if (!event) {
+    return next(new AppError('Nenhum evento encontrado!', 400));
+  }
+
+  if (!(event.userId === userId)) {
+    return next(new AppError('Você não tem permissão para realizar essa ação!', 400));
+  }
+
+  next();
+});
+
 exports.getAllEvents = catchAsync(async (req, res, next) => {
   const events = await Event.findAll();
 
