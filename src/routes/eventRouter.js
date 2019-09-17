@@ -11,8 +11,9 @@ router
 
 router
   .route('/:id')
-  .get(eventController.getEvent)
   .patch(authController.protect, eventController.updateEvent)
   .delete(authController.protect, eventController.deleteEvent);
+
+router.route('/:slug').get(eventController.getEvent);
 
 module.exports = router;
