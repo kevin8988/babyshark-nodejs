@@ -70,10 +70,14 @@ exports.createEvent = catchAsync(async (req, res, next) => {
 });
 
 exports.updateEvent = catchAsync(async (req, res, next) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not working yet'
-  });
+  const { id } = req.params;
+  const { day, title, description } = req.body;
+
+  const event = await Event.findByPk(id);
+
+  await event.update({ day, title, description });
+
+  res.status(200).json({ status: 'success', data: { event } });
 });
 
 exports.deleteEvent = catchAsync(async (req, res, next) => {
