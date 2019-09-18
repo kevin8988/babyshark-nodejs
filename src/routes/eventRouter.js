@@ -15,5 +15,6 @@ router
   .delete(authController.protect, authController.restrictTo('admin'), eventController.deleteEvent);
 
 router.route('/:slug').get(eventController.getEvent);
+router.route('/:slug/participate').post(authController.protect, eventController.checkIfIParticipateEvent, eventController.participateEvent);
 
 module.exports = router;
