@@ -6,13 +6,80 @@ const createSlug = title => {
 
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define('Event', {
-    day: DataTypes.DATE,
-    title: DataTypes.STRING,
-    description: DataTypes.STRING,
+    day: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe uma data para o evento!'
+        },
+        notNull: {
+          msg: 'Por favor, informe uma data para o evento!'
+        },
+        isAfter: {
+          args: new Date().toISOString(),
+          msg: 'O dia do evento deve ser uma data posterior ao dia de hoje!'
+        }
+      }
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe um título!'
+        },
+        notNull: {
+          msg: 'Por favor, informe um título!'
+        },
+        len: {
+          args: [8, 20],
+          msg: 'Por favor, informe um título válido!'
+        }
+      }
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe uma descrição!'
+        },
+        notNull: {
+          msg: 'Por favor, informe uma descrição!'
+        },
+        len: {
+          args: [60, 240],
+          msg: 'Por favor, informe uma descrição válida!'
+        }
+      }
+    },
     slug: DataTypes.STRING,
     active: DataTypes.BOOLEAN,
-    userId: DataTypes.INTEGER,
-    eventAddressId: DataTypes.INTEGER
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe um usuário!'
+        },
+        notNull: {
+          msg: 'Por favor, informe um usuário!'
+        }
+      }
+    },
+    eventAddressId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Por favor, informe um endereço!'
+        },
+        notNull: {
+          msg: 'Por favor, informe um endereço!'
+        }
+      }
+    }
   });
 
   Event.associate = function(models) {
