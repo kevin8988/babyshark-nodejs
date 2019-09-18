@@ -91,9 +91,46 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       active: DataTypes.BOOLEAN,
-      role: DataTypes.STRING,
-      userAddressId: DataTypes.INTEGER,
-      userDetailId: DataTypes.INTEGER
+      role: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: 'Por favor, informe uma role!'
+          },
+          notNull: {
+            msg: 'Por favor, informe uma role!'
+          },
+          isIn: {
+            args: [['admin', 'user']],
+            msg: 'A role deve ser user ou admin!'
+          }
+        }
+      },
+      userAddressId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: 'Por favor, informe um endereço!'
+          },
+          notNull: {
+            msg: 'Por favor, informe um endereço!'
+          }
+        }
+      },
+      userDetailId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: 'Por favor, informe um detalhe!'
+          },
+          notNull: {
+            msg: 'Por favor, informe um detalhe!'
+          }
+        }
+      }
     },
     {
       defaultScope: {
