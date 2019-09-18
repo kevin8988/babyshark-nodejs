@@ -93,12 +93,8 @@ module.exports = (sequelize, DataTypes) => {
       active: DataTypes.BOOLEAN,
       role: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         validate: {
           notEmpty: {
-            msg: 'Por favor, informe uma role!'
-          },
-          notNull: {
             msg: 'Por favor, informe uma role!'
           },
           isIn: {

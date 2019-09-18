@@ -14,6 +14,7 @@ router.route('/me/donates').get(authController.protect, userController.getMyDona
 router.route('/me/donates/interests').get(authController.protect, userController.getMyDonatesInterests);
 router.route('/me/interests').get(authController.protect, userController.getMyInterests);
 router.route('/me/events').get(authController.protect, userController.getMyEvents);
+router.route('/me/events/participants').get(authController.protect, userController.getMyEventsParticipants);
 
 router
   .route('/me/donates/:id')

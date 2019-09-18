@@ -134,6 +134,8 @@ exports.checkIfIParticipateEvent = async (req, res, next) => {
     return next(new AppError('Você ja está participando do evento!', 400));
   }
 
+  req.event = event;
+
   next();
 };
 

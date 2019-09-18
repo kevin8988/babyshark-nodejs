@@ -35,12 +35,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false,
       validate: {
         notEmpty: {
-          msg: 'Por favor, informe um status!'
-        },
-        notNull: {
           msg: 'Por favor, informe um status!'
         },
         isIn: {

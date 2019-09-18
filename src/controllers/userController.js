@@ -1,4 +1,4 @@
-const { User, UsersAddress, UsersDetail, Donate, DonatesPhoto, UsersInterestsDonate, Event, EventsAddress } = require('./../models');
+const { User, UsersAddress, UsersDetail, Donate, DonatesPhoto, UsersInterestsDonate, Event, EventsAddress, EventsUser } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
 
@@ -47,6 +47,18 @@ exports.getMyEvents = catchAsync(async (req, res, next) => {
   const events = await Event.findAll({ where: { userId: id }, include: [{ model: EventsAddress }] });
 
   res.status(200).json({ status: 'success', results: events.length, data: { events } });
+});
+
+exports.getMyEventsParticipants = catchAsync(async (req, res, next) => {
+  const { id } = req.user;
+
+  const eventsUser = await EventsUser.findAll({
+    group: ['eventId'],
+    attributes: ['eventId', [EventsUser.sequelize.fn('COUNT', 'eventId'), 'Participants']],
+    include: [{ model: Event, where: { userId: id } }]
+  });
+
+  res.status(200).json({ status: 'success', results: eventsUser.length, data: { eventsUser } });
 });
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
