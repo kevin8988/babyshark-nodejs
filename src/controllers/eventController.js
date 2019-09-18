@@ -1,8 +1,8 @@
 const axios = require('axios');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
-const { Event, EventsAddress, User } = require('./../models');
-const { sequelize } = require('./../models/index');
+const { Event, EventsAddress, User, EventsUser } = require('./../models');
+const { sequelize, Sequelize } = require('./../models/index');
 
 exports.checkIfIsMyEvent = catchAsync(async (req, res, next) => {
   const { id } = req.params;
@@ -115,4 +115,36 @@ exports.deleteEvent = catchAsync(async (req, res, next) => {
   }
 
   res.status(204).json({ status: 'success', data: null });
+});
+
+exports.checkIfIParticipateEvent = async (req, res, next) => {
+  const { slug } = req.params;
+  const { id } = req.user;
+  const { and } = Sequelize.Op;
+
+  const event = await Event.findOne({ where: { slug } });
+
+  if (!event) {
+    return next(new AppError('Nenhum evento encontrado!', 400));
+  }
+
+  const eventUser = await EventsUser.findOne({ where: { [and]: [{ userId: id }, { eventId: event.id }] } });
+
+  if (eventUser) {
+    return next(new AppError('Você ja está participando do evento!', 400));
+  }
+
+  next();
+};
+
+exports.participateEvent = catchAsync(async (req, res, next) => {
+  const { id } = req.user;
+  const { event } = req;
+
+  const eventUser = await EventsUser.create({
+    eventId: event.id,
+    userId: id
+  });
+
+  res.status(201).json({ status: 'success', data: { eventUser } });
 });
