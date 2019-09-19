@@ -1,8 +1,4 @@
-const slugify = require('slugify');
-
-const createSlug = title => {
-  return slugify(`${title}-${Date.now()}`, { lower: true });
-};
+const slug = require('./../utils/slug');
 
 module.exports = (sequelize, DataTypes) => {
   const Donate = sequelize.define('Donate', {
@@ -89,11 +85,11 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Donate.addHook('beforeUpdate', donate => {
-    donate.slug = createSlug(donate.title);
+    donate.slug = slug(donate.title);
   });
 
   Donate.addHook('beforeCreate', donate => {
-    donate.slug = createSlug(donate.title);
+    donate.slug = slug(donate.title);
   });
 
   return Donate;

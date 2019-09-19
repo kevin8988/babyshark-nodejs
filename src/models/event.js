@@ -1,4 +1,4 @@
-const slugify = require('slugify');
+const slug = require('./../utils/slug');
 
 const createSlug = title => {
   return slugify(`${title}-${Date.now()}`, { lower: true });
@@ -89,11 +89,11 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Event.addHook('beforeUpdate', event => {
-    event.slug = createSlug(event.title);
+    event.slug = slug(event.title);
   });
 
   Event.addHook('beforeCreate', event => {
-    event.slug = createSlug(event.title);
+    event.slug = slug(event.title);
   });
 
   return Event;
