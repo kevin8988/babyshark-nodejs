@@ -1,8 +1,8 @@
 const axios = require('axios');
+const { sequelize, Sequelize } = require('./../models/index');
+const { Event, EventsAddress, User, EventsUser } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
-const { Event, EventsAddress, User, EventsUser } = require('./../models');
-const { sequelize, Sequelize } = require('./../models/index');
 
 exports.checkIfIsMyEvent = catchAsync(async (req, res, next) => {
   const { id } = req.params;

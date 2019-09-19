@@ -1,11 +1,8 @@
 const { promisify } = require('util');
-//const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { sequelize } = require('./../models/index');
-const { User } = require('./../models');
-const { UsersAddress } = require('./../models');
-const { UsersDetail } = require('./../models');
+const { User, UsersAddress, UsersDetail } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 

@@ -1,7 +1,6 @@
 const { Sequelize } = require('./../models/index');
 const { sequelize } = require('./../models/index');
-const { Donate } = require('./../models');
-const { UsersInterestsDonate } = require('./../models');
+const { Donate, UsersInterestsDonate } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 

@@ -1,13 +1,8 @@
 const sharp = require('sharp');
-const { saveFile, deleteFile } = require('./../utils/awsS3');
 const { sequelize, Sequelize } = require('./../models/index');
-const { Donate } = require('./../models');
-const { Category } = require('./../models');
-const { Color } = require('./../models');
-const { Gender } = require('./../models');
-const { DonatesPhoto } = require('./../models');
-const { DonatesCategory, User } = require('./../models');
+const { Donate, Category, Color, Gender, DonatesPhoto, DonatesCategory, User } = require('./../models');
 const multer = require('./../../config/multer');
+const { saveFile, deleteFile } = require('./../utils/awsS3');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../../src/utils/appError');
 
