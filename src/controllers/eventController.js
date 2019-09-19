@@ -21,6 +21,28 @@ exports.checkIfIsMyEvent = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.checkIfIParticipateEvent = async (req, res, next) => {
+  const { slug } = req.params;
+  const { id } = req.user;
+  const { and } = Sequelize.Op;
+
+  const event = await Event.findOne({ where: { slug } });
+
+  if (!event) {
+    return next(new AppError('Nenhum evento encontrado!', 400));
+  }
+
+  const eventUser = await EventsUser.findOne({ where: { [and]: [{ userId: id }, { eventId: event.id }] } });
+
+  if (eventUser) {
+    return next(new AppError('Você ja está participando do evento!', 400));
+  }
+
+  req.event = event;
+
+  next();
+};
+
 exports.getAllEvents = catchAsync(async (req, res, next) => {
   const events = await Event.findAll();
 
@@ -30,7 +52,7 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
 exports.getEvent = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
 
-  const event = Event.findOne({ where: { slug }, include: [{ model: EventsAddress }, { model: User }] });
+  const event = await Event.findOne({ where: { slug }, include: [{ model: EventsAddress }, { model: User }] });
 
   if (!event) {
     return next(new AppError('Nenhum evento encontrado!', 400));
@@ -116,28 +138,6 @@ exports.deleteEvent = catchAsync(async (req, res, next) => {
 
   res.status(204).json({ status: 'success', data: null });
 });
-
-exports.checkIfIParticipateEvent = async (req, res, next) => {
-  const { slug } = req.params;
-  const { id } = req.user;
-  const { and } = Sequelize.Op;
-
-  const event = await Event.findOne({ where: { slug } });
-
-  if (!event) {
-    return next(new AppError('Nenhum evento encontrado!', 400));
-  }
-
-  const eventUser = await EventsUser.findOne({ where: { [and]: [{ userId: id }, { eventId: event.id }] } });
-
-  if (eventUser) {
-    return next(new AppError('Você ja está participando do evento!', 400));
-  }
-
-  req.event = event;
-
-  next();
-};
 
 exports.participateEvent = catchAsync(async (req, res, next) => {
   const { id } = req.user;

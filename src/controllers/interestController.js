@@ -11,6 +11,10 @@ exports.checkIfIsNotMyDonate = catchAsync(async (req, res, next) => {
 
   const donate = await Donate.findOne({ where: { slug } });
 
+  if (!donate) {
+    return next(new AppError('Doação não encontrada!', 404));
+  }
+
   if (donate.userId === id) {
     return next(new AppError('Você não pode ser interessar pela própria doação!', 400));
   }
