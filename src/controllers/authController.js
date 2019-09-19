@@ -1,13 +1,11 @@
 const { promisify } = require('util');
-//const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { sequelize } = require('./../models/index');
-const { User } = require('./../models');
-const { UsersAddress } = require('./../models');
-const { UsersDetail } = require('./../models');
+const { User, UsersAddress, UsersDetail } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const Email = require('./../utils/email');
 
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -53,6 +51,8 @@ exports.signup = catchAsync(async (req, res, next) => {
       },
       { transaction }
     );
+    const url = `${req.protocol}://${req.get('host')}/me`;
+    await new Email(user, url).sendWelcome();
 
     await transaction.commit();
 
