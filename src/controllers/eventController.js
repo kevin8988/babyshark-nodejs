@@ -46,6 +46,9 @@ exports.checkIfIParticipateEvent = async (req, res, next) => {
 exports.getAllEvents = catchAsync(async (req, res, next) => {
   const { like, or, and } = Sequelize.Op;
   const filter = {};
+  const limit = req.query.limit * 1 || 10;
+  const page = req.query.page * 1;
+  const skip = (page - 1) * limit;
 
   if (req.query.title) {
     const title = `%${req.query.title}%`;
@@ -76,7 +79,7 @@ exports.getAllEvents = catchAsync(async (req, res, next) => {
     filter.states = null;
   }
 
-  const events = await Event.findAll({ where: { title: filter.title }, include: [{ model: EventsAddress, where: { [and]: [filter.cities, filter.states] } }] });
+  const events = await Event.findAll({ where: { title: filter.title }, include: [{ model: EventsAddress, where: { [and]: [filter.cities, filter.states] } }] }, { offset: skip, limit });
 
   res.status(200).json({ status: 'success', results: events.length, data: { events } });
 });
