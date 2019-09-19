@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
@@ -18,6 +20,9 @@ app.use(helmet());
 app.use(xss());
 app.use(express.json());
 app.use(cookieParser());
+
+app.set('view engine', 'pug');
+app.set('templates', path.join(__dirname, 'src', 'templates'));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
