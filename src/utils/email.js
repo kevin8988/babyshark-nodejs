@@ -3,11 +3,14 @@ const pug = require('pug');
 const htmlToText = require('html-to-text');
 
 module.exports = class Email {
-  constructor(user, url) {
+  constructor(user, url, donate) {
     this.to = user.email;
     this.firstName = user.firstName;
     this.url = url;
     this.from = `BabyShark <${process.env.EMAIL_FROM}>`;
+    if (donate) {
+      this.title = donate.title;
+    }
   }
 
   createTransport() {
@@ -36,7 +39,8 @@ module.exports = class Email {
     const html = pug.renderFile(`${__dirname}/../templates/emails/${template}.pug`, {
       firstName: this.firstName,
       url: this.url,
-      subject
+      subject,
+      title: this.title
     });
 
     // 2. Define email options
@@ -58,5 +62,9 @@ module.exports = class Email {
 
   async sendResetPassword() {
     await this.send('passwordReset', 'Seu token para resetar sua senha!');
+  }
+
+  async sendInterest() {
+    await this.send('interest', 'Alguém se interessou pela sua doação!');
   }
 };

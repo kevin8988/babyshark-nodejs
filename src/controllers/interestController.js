@@ -1,8 +1,9 @@
 const { Sequelize } = require('./../models/index');
 const { sequelize } = require('./../models/index');
-const { Donate, UsersInterestsDonate } = require('./../models');
+const { Donate, UsersInterestsDonate, User } = require('./../models');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const Email = require('./../utils/email');
 
 exports.checkIfIsNotMyDonate = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
@@ -66,6 +67,11 @@ exports.createInterest = catchAsync(async (req, res, next) => {
     donateId: donate.id,
     message
   });
+
+  const user = await User.findByPk(donate.userId);
+
+  const url = `${req.protocol}://${req.get('host')}/me/donates/interests`;
+  await new Email(user, url, donate).sendInterest();
 
   res.status(201).json({ status: 'success', data: { interest } });
 });

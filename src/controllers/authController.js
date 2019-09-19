@@ -51,11 +51,10 @@ exports.signup = catchAsync(async (req, res, next) => {
       },
       { transaction }
     );
-
-    await transaction.commit();
-
     const url = `${req.protocol}://${req.get('host')}/me`;
     await new Email(user, url).sendWelcome();
+
+    await transaction.commit();
 
     createSentToken(user, 201, res);
   } catch (err) {
