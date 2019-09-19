@@ -58,8 +58,10 @@ exports.checkIfIsMyDonate = catchAsync(async (req, res, next) => {
 
 exports.getDonates = catchAsync(async (req, res, next) => {
   const { like, or } = Sequelize.Op;
-
   const filter = {};
+  const limit = req.query.limit * 1 || 10;
+  const page = req.query.page * 1;
+  const skip = (page - 1) * limit;
 
   if (req.query.title) {
     const title = `%${req.query.title}%`;
@@ -101,10 +103,13 @@ exports.getDonates = catchAsync(async (req, res, next) => {
     filter.genders = null;
   }
 
-  const donates = await Donate.findAll({
-    where: { title: filter.title },
-    include: [{ model: Color, where: filter.colors }, { model: Category, where: filter.categories }, { model: Gender, where: filter.genders }, { model: DonatesPhoto, as: 'Photos' }]
-  });
+  const donates = await Donate.findAll(
+    {
+      where: { title: filter.title },
+      include: [{ model: Color, where: filter.colors }, { model: Category, where: filter.categories }, { model: Gender, where: filter.genders }, { model: DonatesPhoto, as: 'Photos' }]
+    },
+    { offset: skip, limit }
+  );
 
   res.status(200).json({ status: 'success', data: { donates } });
 });
