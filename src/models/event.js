@@ -1,9 +1,5 @@
 const slug = require('./../utils/slug');
 
-const createSlug = title => {
-  return slugify(`${title}-${Date.now()}`, { lower: true });
-};
-
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define('Event', {
     day: {
