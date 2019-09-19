@@ -9,7 +9,10 @@ const router = express.Router();
 router.route('/signup').post(authController.signup);
 router.route('/login').post(authController.login);
 
-router.route('/me').get(authController.protect, userController.getMe, userController.getUser);
+router
+  .route('/me')
+  .get(authController.protect, userController.getMe, userController.getUser)
+  .patch(authController.protect, userController.updateMe);
 router.route('/me/donates').get(authController.protect, userController.getMyDonates);
 router.route('/me/donates/interests').get(authController.protect, userController.getMyDonatesInterests);
 router.route('/me/interests').get(authController.protect, userController.getMyInterests);
