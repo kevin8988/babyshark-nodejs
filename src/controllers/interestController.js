@@ -18,19 +18,15 @@ exports.checkIfIsNotMyDonate = catchAsync(async (req, res, next) => {
     return next(new AppError('Você não pode ser interessar pela própria doação!', 400));
   }
 
+  req.donate = donate;
+
   next();
 });
 
 exports.checkExistingInterest = catchAsync(async (req, res, next) => {
   const { and } = Sequelize.Op;
-  const { slug } = req.params;
+  const { donate } = req;
   const { id } = req.user;
-
-  const donate = await Donate.findOne({ where: { slug } });
-
-  if (!donate) {
-    return next(new AppError('Nenhuma doação encontrada!', 404));
-  }
 
   const interest = await UsersInterestsDonate.findOne({ where: { [and]: [{ userId: id }, { donateId: donate.id }] } });
 
@@ -61,11 +57,9 @@ exports.checkIfIsMyInterest = catchAsync(async (req, res, next) => {
 });
 
 exports.createInterest = catchAsync(async (req, res, next) => {
-  const { slug } = req.params;
+  const { donate } = req;
   const { id } = req.user;
   const { message } = req.body;
-
-  const donate = await Donate.findOne({ where: { slug } });
 
   const interest = await UsersInterestsDonate.create({
     userId: id,
