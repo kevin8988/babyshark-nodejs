@@ -61,6 +61,14 @@ exports.getMyEventsParticipants = catchAsync(async (req, res, next) => {
   res.status(200).json({ status: 'success', results: eventsUser.length, data: { eventsUser } });
 });
 
+exports.getMyParticipateEvents = catchAsync(async (req, res, next) => {
+  const { id } = req.user;
+
+  const eventsUser = await EventsUser.findAll({ where: { userId: id }, include: [{ model: Event }] });
+
+  res.status(200).json({ status: 'success', results: eventsUser.length, data: { eventsUser } });
+});
+
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.findAll({ include: [{ model: UsersAddress }, { model: UsersDetail }] });
 
